@@ -56,13 +56,13 @@
                                 <div class="card-body">
                                     <form class="form-horizontal form-simple" method="post" action="">
                                         <fieldset class="form-group position-relative has-icon-left mb-0">
-                                            <input type="text" class="form-control" id="user" name="user" placeholder="Tên đăng nhập" required autocomplete="new-username">
+                                            <input type="text" class="form-control" id="user" name="user" placeholder="Tên đăng nhập">
                                             <div class="form-control-position">
                                                 <i class="ft-user"></i>
                                             </div>
                                         </fieldset>
                                         <fieldset class="form-group position-relative has-icon-left">
-                                            <input type="password" class="form-control" id="pass" name="pass" autocomplete="new-password" placeholder="Mật khẩu" required>
+                                            <input type="password" class="form-control" id="pass" name="pass" placeholder="Mật khẩu">
                                             <div class="form-control-position">
                                                 <i class="la la-key"></i>
                                             </div>

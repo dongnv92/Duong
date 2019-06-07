@@ -1,0 +1,16 @@
+RewriteEngine on
+php_value allow_url_fopen On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^login$ login.php [L]
+RewriteRule ^logout$ logout.php [L]
+RewriteRule ^custom.js$ src/class/javascript.php [L,QSA,B]
+RewriteRule ^api/$ src/class/api.php [L,QSA,B]
+
+
+
+
+
+
+
+

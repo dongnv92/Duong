@@ -1,4 +1,9 @@
-
+<?php
+require_once 'src/core.php';
+if($user){
+    $function_duong->redirectUrl(_CONFIG_URL_HOME);
+}
+?>
 <!DOCTYPE html>
 <html class="loading" lang="en" data-textdirection="ltr">
 <!-- BEGIN: Head-->

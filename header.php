@@ -12,7 +12,7 @@ $header['title'] = (isset($header['title']) ? $header['title'] : 'Trang Quản T
     <title><?=$header['title']?></title>
     <link rel="apple-touch-icon" href="<?=_URL_HOME?>/favicon.png">
     <link rel="shortcut icon" type="image/x-icon" href="<?=_URL_HOME?>/favicon.png">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Quicksand:300,400,500,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Comfortaa:300,300i,400,400i,600,600i,700,700i|Quicksand:300,400,500,700" rel="stylesheet">
     <link href="https://maxcdn.icons8.com/fonts/line-awesome/1.1/css/line-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="assets/css/vendors.css">
     <link rel="stylesheet" type="text/css" href="assets/css/app.css">
@@ -54,8 +54,8 @@ $header['title'] = (isset($header['title']) ? $header['title'] : 'Trang Quản T
                 <ul class="nav navbar-nav float-right">
                     <li class="dropdown dropdown-user nav-item">
                         <a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown">
-                            <span class="mr-1">Xin chào ,<span class="user-name text-bold-700"><?php echo $user['user_name'];?></span></span>
-                            <span class="avatar avatar-online"><img src="<?php echo 'images/avatar.png'; ?>" alt="avatar"><i></i></span>
+                            <span class="mr-1">Xin chào ,<span class="user-name text-bold-700"><?=$user['user_fullname']?></span></span>
+                            <span class="avatar avatar-online"><img src="<?=_CONFIG_URL_AVATAR?>" alt="avatar"><i></i></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">
                             <a class="dropdown-item" href="#"><i class="ft-user"></i> Xem trang cá nhân</a>
@@ -128,15 +128,8 @@ $header['title'] = (isset($header['title']) ? $header['title'] : 'Trang Quản T
                 <span data-i18n="nav.category.layouts">Ban Quản Trị</span>
                 <i class="la la-diamond ft-minus" data-toggle="tooltip" data-placement="right" data-original-title="Layouts"></i>
             </li>
-            <li class=" nav-item">
-                <a href="#"><i class="ft-shopping-cart"></i><span class="menu-title">Sản phẩm</span></a>
-                <ul class="menu-content">
-                    <li <?php echo ($admin_module == 'product' && in_array($act, array('', 'update'))) ? 'class="active"' : '';?>><a class="menu-item" href="<?php echo _URL_ADMIN;?>/product.php"><i class="ft-list"></i> Danh sách sản phẩm</a></li>
-                    <li <?php echo ($admin_module == 'product' && $act == 'add') ? 'class="active"' : '';?>><a class="menu-item" href="<?php echo _URL_ADMIN;?>/product.php?act=add"><i class="ft-plus"></i> Thêm sản phẩm</a></li>
-                    <li <?php echo ($admin_module == 'category' && $type == 'shop') ? 'class="active"' : '';?>><a class="menu-item" href="<?php echo _URL_ADMIN;?>/category.php?type=shop"><i class="ft-hash"></i> Chuyên mục</a></li>
-                    <li <?php echo ($admin_module == 'category' && $type == 'brand') ? 'class="active"' : '';?>><a class="menu-item" href="<?php echo _URL_ADMIN;?>/category.php?type=brand"><i class="la la-twitter-square"></i> Thương Hiệu</a></li>
-                    <li <?php echo ($admin_module == 'category' && $type == 'quality') ? 'class="active"' : '';?>><a class="menu-item" href="<?php echo _URL_ADMIN;?>/category.php?type=quality"><i class="la la-certificate"></i> Loại sản phẩm</a></li>
-                </ul>
+            <li class="nav-item <?php echo ($header['module'] == 'metadata' && in_array($act, ['handbag'])) ? 'active' : '';?>">
+                <a href="<?=_CONFIG_URL_HOME?>/metadata.php?act=handbag"><i class="la la-suitcase"></i> <span class="menu-title">Loại Túi</span></a>
             </li>
             <li class=" nav-item">
                 <a href="#"><i class="la la-cogs"></i><span class="menu-title">Cài đặt</span></a>
@@ -173,8 +166,7 @@ $header['title'] = (isset($header['title']) ? $header['title'] : 'Trang Quản T
                 <span data-i18n="nav.category.layouts">Điều hướng</span>
                 <i class="la la-ellipsis-h ft-minus" data-toggle="tooltip" data-placement="right" data-original-title="Layouts"></i>
             </li>
-            <li class=" nav-item"><a href="<?php echo _URL_HOME;?>" target="_blank"><i class="la la-home"></i><span class="menu-title">Trang Chủ</span></a></li>
-            <li class=" nav-item"><a href="<?php echo _URL_LOGOUT;?>"><i class="la la-long-arrow-left"></i><span class="menu-title">Đăng xuất</span></a></li>
+            <li class=" nav-item"><a href="<?php echo _CONFIG_URL_LOGOUT;?>"><i class="la la-long-arrow-left"></i><span class="menu-title">Đăng xuất</span></a></li>
         </ul>
     </div>
 </div>

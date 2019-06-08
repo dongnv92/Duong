@@ -1,6 +1,11 @@
 <?php
 
 class functionDuong{
+
+    public function redirectUrl($url){
+        return header('location:'.$url);
+    }
+
     // Tạo Mã Token
     public function createToken(){
         return md5(md5(_CONFIG_TOKEN_KEYSTART._CONFIG_TIME._CONFIG_TOKEN_KEYSEND));

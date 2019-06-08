@@ -7,6 +7,10 @@
  */
 require_once 'src/core.php';
 
+if(!$user){
+    $function_duong->redirectUrl(_CONFIG_URL_LOGIN);
+}
+
 $header['title'] = 'Trang quản trị';
 require_once 'header.php';
 

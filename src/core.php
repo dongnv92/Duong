@@ -22,6 +22,7 @@ define('_CONFIG_DATETIME', date('Y-m-d H:i:s', _CONFIG_TIME));
 define('_CONFIG_TIMETOKEN', 600);
 define('_CONFIG_TOKEN_KEYSTART', 'DONG');
 define('_CONFIG_TOKEN_KEYSEND', 'CHINH');
+define('_CONFIG_PAGINATION', 50);
 
 define('_CONFIG_URL_HOME', 'http://localhost/dong/duong');
 define('_CONFIG_URL_API', _CONFIG_URL_HOME.'/api/');
@@ -35,6 +36,7 @@ define('_DB_DATABASE', 'duong');
 
 define('_DB_TABLE_USERS', 'dong_users');
 define('_DB_TABLE_METADATA', 'dong_metadata');
+define('_DB_TABLE_CUSTOMER', 'dong_customer');
 
 $function_duong = new functionDuong();
 $db_duong       = new Database(_DB_HOST, _DB_USERNAME, _DB_PASSWORD, _DB_DATABASE);
@@ -65,3 +67,4 @@ $act    = (isset($_REQUEST['act'])      && !empty($_REQUEST['act']))    ? $_REQU
 $type   = (isset($_REQUEST['type'])     && !empty($_REQUEST['type']))   ? $_REQUEST['type']         : false;
 $url    = (isset($_REQUEST['url'])      && !empty($_REQUEST['url']))    ? trim($_REQUEST['url'])    : false;
 $token  = (isset($_REQUEST['token'])    && !empty($_REQUEST['token']))  ? trim($_REQUEST['token'])  : false;
+$page   = (isset($_REQUEST['page'])     && !empty($_REQUEST['page']))   ? trim($_REQUEST['page'])   : 1;

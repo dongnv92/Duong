@@ -3,62 +3,172 @@ require_once '../core.php';
 header('Content-Type: text/html; charset=utf-8');
 
 if(!$token){
-    $response = [
-        'response'  => 404,
-        'message'   => 'Missing Token'
-    ];
+    $response = ['response'  => 404,'message'   => 'Missing Token'];
     echo json_encode($response);
     exit();
 }
 
 if(!$function_duong->checkToken($token)){
-    $response = [
-        'response'  => 401,
-        'message'   => 'Invalid token code'
-    ];
+    $response = ['response'  => 401,'message'   => 'Invalid token code'];
     echo json_encode($response);
     exit();
 }
 
 switch ($act){
-    case 'metadata':
+    case 'customer':
         switch ($type){
-            case 'handbag_add':
-                $handbagname = isset($_POST['handbagname']) ? trim($_POST['handbagname']) : '';
-                if(!$handbagname){
-                    $response = ['response'  => 404,'message'   => 'Missing Hangbag Name.'];
-                    echo json_encode($response);
+            case 'add':
+                $customer_name      = isset($_POST['customer_name'])    && !empty($_POST['customer_name'])      ? trim($_POST['customer_name'])     : '';
+                $customer_address   = isset($_POST['customer_address']) && !empty($_POST['customer_address'])   ? trim($_POST['customer_address'])  : '';
+                $customer_phone     = isset($_POST['customer_phone'])   && !empty($_POST['customer_phone'])     ? trim($_POST['customer_phone'])    : '';
+                $customer_handbag   = isset($_POST['customer_handbag']) && !empty($_POST['customer_handbag'])   ? trim($_POST['customer_handbag'])  : 0;
+                $customer_sizedbag  = isset($_POST['customer_sizedbag'])&& !empty($_POST['customer_sizedbag'])  ? trim($_POST['customer_sizedbag']) : 0;
+                if(!$customer_name){
+                    $response = ['response' => 404, 'Thiếu trường tên khách hàng'];
+                    echo  json_encode($response);
                     break;
                 }
                 $data = [
-                    'metadata_type' => 'handbag',
-                    'metadata_name' => $handbagname,
-                    'metadata_des'  => '',
-                    'metadata_sub'  => 0,
-                    'metadata_rule' => '',
-                    'metadata_time' => _CONFIG_DATETIME
+                    'customer_name'     => $customer_name,
+                    'customer_address'  => $customer_address,
+                    'customer_phone'    => $customer_phone,
+                    'customer_handbag'  => $customer_handbag,
+                    'customer_sizebag'  => $customer_sizedbag,
+                    'customer_time'     => _CONFIG_DATETIME
                 ];
-                if(!$db_duong->insert(_DB_TABLE_METADATA, $data)){
-                    $response = ['response'  => 500,'message'   => 'Error add Hand Bag SQL.'];
+                if(!$db_duong->insert(_DB_TABLE_CUSTOMER, $data)){
+                    $response = ['response' => 500, 'Lỗi SQL khi thêm khách hàng'];
+                    echo  json_encode($response);
+                    break;
+                }
+                $response = ['response' => 200, 'Thêm khách hàng thành công'];
+                echo  json_encode($response);
+                break;
+            case 'delete':
+                if(!$id){
+                    $response = ['response' => 404, 'message' => 'Không tồn tại mã ID khách hàng này.'];
                     echo json_encode($response);
                     break;
                 }
-                $response = ['response'  => 200,'message'   => 'Add Handbag Success.'];
+                $check = $db_duong->select('customer_id')->from(_DB_TABLE_CUSTOMER)->where('customer_id', $id)->fetch_first();
+                if(!$check){
+                    $response = ['response' => 404, 'message' => 'Khách hàng này không tồn tại.'];
+                    echo json_encode($response);
+                    break;
+                }
+                if(!$db_duong->delete(_DB_TABLE_CUSTOMER)->where('customer_id', $id)->execute()){
+                    $response = ['response' => 500, 'message' => 'Lỗi SQL khi xóa khách hàng này.'];
+                    echo json_encode($response);
+                    break;
+                }
+                $response = ['response' => 200, 'message' => 'Xóa khách hàng thành công.'];
                 echo json_encode($response);
                 break;
-            case 'handbag_delete':
-                $check = $db_duong->select()->from(_DB_TABLE_METADATA)->where(['metadata_type' => 'handbag', 'metadata_id' => $id])->fetch_first();
+            default:
+                $response = ['response' => 404, 'Type Customer không được hỗ trợ'];
+                echo  json_encode($response);
+                break;
+        }
+        break;
+    case 'metadata':
+        switch ($type){
+            case 'getalldata':
+                $metadataType   = isset($_GET['metadata_type']) ? trim($_GET['metadata_type']) : '';
+                $data           = $db_duong->from(_DB_TABLE_METADATA)->where('metadata_type',$metadataType)->fetch();
+                $response       = [
+                    'response'  => 200,
+                    'data'      => $data
+                ];
+                echo json_encode($response);
+                break;
+            case 'add':
+                $metadataType  = isset($_POST['metadata_type'])    ? trim($_POST['metadata_type']) : '';
+                $metadata_name = isset($_POST['metadata_name'])    ? trim($_POST['metadata_name']) : '';
+                switch ($metadataType){
+                    case in_array($metadataType, ['handbag', 'sizebag']):
+                        if(!$metadata_name){
+                            $response = ['response'  => 404,'message'   => 'Thiếu trường Metadata Name. Vui lòng thử lại'];
+                            echo json_encode($response);
+                            break;
+                        }
+                        $data = [
+                            'metadata_type' => $metadataType,
+                            'metadata_name' => $metadata_name,
+                            'metadata_des'  => '',
+                            'metadata_sub'  => 0,
+                            'metadata_rule' => '',
+                            'metadata_time' => _CONFIG_DATETIME
+                        ];
+                        if(!$db_duong->insert(_DB_TABLE_METADATA, $data)){
+                            $response = ['response'  => 500,'message'   => 'Lỗi SQL trong khi thêm dữ liệu.'];
+                            echo json_encode($response);
+                            break;
+                        }
+                        $response = [
+                            'response'  => 200,
+                            'message'   => 'Thêm dữ liệu thành công.',
+                            'url'       => _CONFIG_URL_HOME.'/metadata.php?act='.$metadataType
+                        ];
+                        echo json_encode($response);
+                        break;
+                    default:
+                        $response = ['response' => 404, 'message' => 'Metadata Type không được hỗ trợ'];
+                        echo json_encode($response);
+                        break;
+                }
+                break;
+            case 'delete':
+                $metadataType   = isset($_POST['metadata_type']) ? trim($_POST['metadata_type']) : '';
+                if(!$id || !$metadataType){
+                    $response = ['response' => 404, 'message' => 'Thiếu trường ID hoặc Metadata Type'];
+                    echo json_encode($response);
+                    break;
+                }
+                $check          = $db_duong->select()->from(_DB_TABLE_METADATA)->where(['metadata_type' => $metadataType, 'metadata_id' => $id])->fetch_first();
                 if(!$check){
                     $response = ['response'  => 404,'message'   => 'Hand Bag not Available.'];
                     echo json_encode($response);
                     break;
                 }
-                if(!$db_duong->delete(_DB_TABLE_METADATA)->where(['metadata_type' => 'handbag', 'metadata_id' => $id])->execute()){
-                    $response = ['response'  => 500,'message'   => 'Delete Hand Bag Error SQL.'];
+                if(!$db_duong->delete(_DB_TABLE_METADATA)->where(['metadata_type' => $metadataType, 'metadata_id' => $id])->execute()){
+                    $response = ['response'  => 500,'message'   => 'Lỗi SQL xóa Metadata '];
                     echo json_encode($response);
                     break;
                 }
-                $response = ['response'  => 200,'message'   => 'Delete Hand Bag Success'];
+                $response = ['response'  => 200,'message'   => 'Xóa dữ liệu thành công'];
+                echo json_encode($response);
+                break;
+            case 'update':
+                $metadataType   = isset($_POST['metadata_type'])    ? trim($_POST['metadata_type']) : '';
+                $metadataName   = isset($_POST['metadata_name'])    ? trim($_POST['metadata_name']) : '';
+                if(!$id || !$metadataType || !$metadataName){
+                    $text = '';
+                    if(!$id){
+                        $text = ' ID ';
+                    }
+                    if(!$metadataType){
+                        $text = ' TYPE : '.$metadataType;
+                    }
+                    if(!$metadataName){
+                        $text = ' NAME ';
+                    }
+                    $response = ['response' => 404, 'message' => 'Thiếu trường ID hoặc Metadata Name hoặc Metadata Type: '.$text];
+                    echo json_encode($response);
+                    break;
+                }
+                $check          = $db_duong->from(_DB_TABLE_METADATA)->where(['metadata_id' => $id, 'metadata_type' => $metadataType])->fetch_first();
+                if(!$check){
+                    $response = ['response' => 404,'message'=> 'Không có dữ liệu. Vui lòng thử lại'];
+                    echo json_encode($response);
+                    break;
+                }
+                $data = ['metadata_name' => $metadataName];
+                if(!$db_duong->where(['metadata_id' => $id, 'metadata_type' => $metadataType])->update(_DB_TABLE_METADATA, $data)){
+                    $response = ['response'  => 500,'message'   => 'Error Update Hand Bag SQL.'];
+                    echo json_encode($response);
+                    break;
+                }
+                $response = ['response'  => 200,'message'   => 'Cập nhật dữ liệu thành công.'];
                 echo json_encode($response);
                 break;
             default:

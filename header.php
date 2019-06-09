@@ -128,8 +128,35 @@ $header['title'] = (isset($header['title']) ? $header['title'] : 'Trang Quản T
                 <span data-i18n="nav.category.layouts">Ban Quản Trị</span>
                 <i class="la la-diamond ft-minus" data-toggle="tooltip" data-placement="right" data-original-title="Layouts"></i>
             </li>
-            <li class="nav-item <?php echo ($header['module'] == 'metadata' && in_array($act, ['handbag'])) ? 'active' : '';?>">
-                <a href="<?=_CONFIG_URL_HOME?>/metadata.php?act=handbag"><i class="la la-suitcase"></i> <span class="menu-title">Loại Túi</span></a>
+            <li class=" nav-item">
+                <a href="#"><i class="la la-suitcase"></i> <span class="menu-title">Quản lý túi</span></a>
+                <ul class="menu-content">
+                    <li <?php echo ($header['module'] == 'metadata' && in_array($act, ['handbag'])) ? 'class="active"' : '';?>>
+                        <a class="menu-item" href="<?=_CONFIG_URL_HOME?>/metadata.php?act=handbag">
+                            <i class="la la-credit-card"></i> Loại Túi
+                        </a>
+                    </li>
+                    <li <?php echo ($header['module'] == 'metadata' && in_array($act, ['sizebag'])) ? 'class="active"' : '';?>>
+                        <a class="menu-item" href="<?=_CONFIG_URL_HOME?>/metadata.php?act=sizebag">
+                            <i class="ft-crop"></i> Kích thước túi
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class=" nav-item">
+                <a href="#"><i class="ft-users"></i><span class="menu-title">Quản lý khách hàng</span></a>
+                <ul class="menu-content">
+                    <li <?php echo ($header['module'] == 'customer' && in_array($act, array(''))) ? 'class="active"' : '';?>>
+                        <a class="menu-item" href="<?=_CONFIG_URL_HOME?>/customer.php">
+                            <i class="ft-user"></i> Danh sách khách hàng
+                        </a>
+                    </li>
+                    <li <?php echo ($admin_module == 'users' && $act == 'add') ? 'class="active"' : '';?>>
+                        <a class="menu-item" href="<?php echo _URL_ADMIN;?>/users.php?act=add">
+                            <i class="ft-user-plus"></i> Thêm thành viên
+                        </a>
+                    </li>
+                </ul>
             </li>
             <li class=" nav-item">
                 <a href="#"><i class="la la-cogs"></i><span class="menu-title">Cài đặt</span></a>
@@ -142,21 +169,6 @@ $header['title'] = (isset($header['title']) ? $header['title'] : 'Trang Quản T
                     <li <?php echo ($admin_module == 'category' && in_array($type, array('role'))) ? 'class="active"' : '';?>>
                         <a class="menu-item" href="<?php echo _URL_ADMIN;?>/category.php?type=role">
                             <i class="ft-users"></i> Vai trò thành viên
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            <li class=" nav-item">
-                <a href="#"><i class="ft-users"></i><span class="menu-title">Quản lý thành viên</span></a>
-                <ul class="menu-content">
-                    <li <?php echo ($admin_module == 'users' && in_array($act, array('', 'update'))) ? 'class="active"' : '';?>>
-                        <a class="menu-item" href="<?php echo _URL_ADMIN;?>/users.php">
-                            <i class="ft-user"></i> Danh sách thành viên
-                        </a>
-                    </li>
-                    <li <?php echo ($admin_module == 'users' && $act == 'add') ? 'class="active"' : '';?>>
-                        <a class="menu-item" href="<?php echo _URL_ADMIN;?>/users.php?act=add">
-                            <i class="ft-user-plus"></i> Thêm thành viên
                         </a>
                     </li>
                 </ul>

@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th6 08, 2019 lúc 07:05 AM
--- Phiên bản máy phục vụ: 10.1.35-MariaDB
--- Phiên bản PHP: 7.2.9
+-- Thời gian đã tạo: Th6 09, 2019 lúc 05:54 PM
+-- Phiên bản máy phục vụ: 10.1.36-MariaDB
+-- Phiên bản PHP: 7.2.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -21,6 +21,30 @@ SET time_zone = "+00:00";
 --
 -- Cơ sở dữ liệu: `duong`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `dong_customer`
+--
+
+CREATE TABLE `dong_customer` (
+  `customer_id` int(11) NOT NULL,
+  `customer_name` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `customer_address` varchar(2000) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `customer_phone` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `customer_handbag` int(11) DEFAULT NULL,
+  `customer_sizebag` int(11) DEFAULT NULL,
+  `customer_time` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `dong_customer`
+--
+
+INSERT INTO `dong_customer` (`customer_id`, `customer_name`, `customer_address`, `customer_phone`, `customer_handbag`, `customer_sizebag`, `customer_time`) VALUES
+(1, 'Nguyễn Văn Đông', 'Do Hạ', '966624292', 1, 17, '2019-06-09 12:00:09'),
+(3, 'Nguyen Van Dong', 'tien phong, me linh', '969392114', 2, 17, '2019-06-09 21:31:19');
 
 -- --------------------------------------------------------
 
@@ -47,7 +71,13 @@ INSERT INTO `dong_metadata` (`metadata_id`, `metadata_type`, `metadata_name`, `m
 (2, 'handbag', 'Trắng Trong', '', 0, '', '2019-06-08 11:29:49'),
 (3, 'handbag', 'Hồng', '', 0, '', '2019-06-08 11:30:05'),
 (4, 'handbag', 'HĐ', '', 0, '', '2019-06-08 11:30:09'),
-(5, 'handbag', 'Đen', '', 0, '', '2019-06-08 11:30:12');
+(5, 'handbag', 'Đen', '', 0, '', '2019-06-08 11:30:12'),
+(16, 'sizebag', '15x25', '', 0, '', '2019-06-08 20:47:59'),
+(17, 'sizebag', '20x30', '', 0, '', '2019-06-08 21:14:49'),
+(19, 'sizebag', '25x35', '', 0, '', '2019-06-08 22:16:50'),
+(20, 'sizebag', '30x42', '', 0, '', '2019-06-08 22:17:01'),
+(21, 'sizebag', '35x50', '', 0, '', '2019-06-08 22:17:19'),
+(22, 'sizebag', '40x60', '', 0, '', '2019-06-08 22:17:32');
 
 -- --------------------------------------------------------
 
@@ -79,6 +109,12 @@ INSERT INTO `dong_users` (`user_id`, `user_name`, `user_password`, `user_fullnam
 --
 
 --
+-- Chỉ mục cho bảng `dong_customer`
+--
+ALTER TABLE `dong_customer`
+  ADD PRIMARY KEY (`customer_id`);
+
+--
 -- Chỉ mục cho bảng `dong_metadata`
 --
 ALTER TABLE `dong_metadata`
@@ -95,10 +131,16 @@ ALTER TABLE `dong_users`
 --
 
 --
+-- AUTO_INCREMENT cho bảng `dong_customer`
+--
+ALTER TABLE `dong_customer`
+  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT cho bảng `dong_metadata`
 --
 ALTER TABLE `dong_metadata`
-  MODIFY `metadata_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `metadata_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT cho bảng `dong_users`

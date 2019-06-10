@@ -3,6 +3,18 @@ require_once '../core.php';
 header('Content-type: application/javascript');
 
 switch ($act){
+    case 'bill':
+        ?>
+        //<script>
+        $(document).ready(function () {
+            $('#billbuy_add').click(function () {
+
+                return false;
+            });
+        });
+        //</script>
+        <?php
+        break;
     case 'customer':
         ?>
         //<script>
@@ -101,16 +113,48 @@ switch ($act){
             });
 
             // Update Customer
-            $('a[data-text=customer_update]').click(function () {
+            $('button[data-text=submit_updatecustomer]').click(function () {
                 var customer_id         = $(this).attr('data-content');
                 var customer_name       = $('#customer_name_'+ customer_id).val();
                 var customer_address    = $('#customer_address_'+ customer_id).val();
                 var customer_phone      = $('#customer_phone_'+ customer_id).val();
                 var customer_handbag    = $('#customer_handbag_'+ customer_id).val();
                 var customer_sizedbag   = $('#customer_sizedbag_'+ customer_id).val();
+                var title               = 'Cập nhật khách hàng';
 
-                console.log(customer_id+ '\n' + customer_name + '\n' + customer_address + '\n' + customer_phone + '\n' + customer_handbag + '\n' + customer_sizedbag);
-                //return false;
+                if(!customer_name){
+                    swal(title,'Tên khách hàng không được để trống', 'error');
+                    return false;
+                }
+
+                $.ajax({
+                    url         : '<?=_CONFIG_URL_API?>',
+                    method      : 'POST',
+                    dataType    : 'json',
+                    data        : {
+                        'token'             : '<?=$function_duong->createToken()?>',
+                        'act'               : 'customer',
+                        'type'              : 'update',
+                        'id'                : customer_id,
+                        'customer_name'     : customer_name,
+                        'customer_address'  : customer_address,
+                        'customer_phone'    : customer_phone,
+                        'customer_handbag'  : customer_handbag,
+                        'customer_sizedbag' : customer_sizedbag
+                    },
+                    beforeSend  : function () {
+                        $('button[data-text=submit_updatecustomer]').html('Đang cập nhật ...');
+                    },
+                    success     : function (data) {
+                        $('button[data-text=submit_updatecustomer]').html('Cập nhật');
+                        if(data.response == 200){
+                            $(location).attr('href', '<?=_CONFIG_URL_HOME?>/customer.php');
+                        }else{
+                            swal(title, data.message, 'error');
+                        }
+                    }
+                });
+
             });
         });
         //</script>

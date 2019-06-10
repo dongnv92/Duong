@@ -1,6 +1,8 @@
 <?php
 require_once 'src/core.php';
 
-$check = $db_duong->select('user_id')->from(_DB_TABLE_USERS)->where(['user_name' => 'xdongnv', 'user_password' => md5('123456')])->fetch_first();
-
-print_r($check);
+if($db_duong->select('user_id')->from(_DB_TABLE_USERS)->where('user_id', 1)->fetch_first()){
+    echo "Có";
+}else{
+    echo "Không";
+}

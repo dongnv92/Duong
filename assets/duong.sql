@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th6 09, 2019 lúc 05:54 PM
--- Phiên bản máy phục vụ: 10.1.36-MariaDB
--- Phiên bản PHP: 7.2.10
+-- Thời gian đã tạo: Th6 10, 2019 lúc 12:29 PM
+-- Phiên bản máy phục vụ: 10.1.35-MariaDB
+-- Phiên bản PHP: 7.2.9
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -21,6 +21,33 @@ SET time_zone = "+00:00";
 --
 -- Cơ sở dữ liệu: `duong`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `dong_bill`
+--
+
+CREATE TABLE `dong_bill` (
+  `bill_id` int(11) NOT NULL,
+  `bill_type` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `bill_customer` int(11) DEFAULT NULL,
+  `bill_handbag` int(11) NOT NULL,
+  `bill_sizebag` int(11) NOT NULL,
+  `bill_amount` int(11) NOT NULL,
+  `bill_price` int(11) NOT NULL,
+  `bill_total_price` int(11) NOT NULL,
+  `bill_user` int(11) NOT NULL,
+  `bill_note` varchar(1000) COLLATE utf8_unicode_ci NOT NULL,
+  `bill_time` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `dong_bill`
+--
+
+INSERT INTO `dong_bill` (`bill_id`, `bill_type`, `bill_customer`, `bill_handbag`, `bill_sizebag`, `bill_amount`, `bill_price`, `bill_total_price`, `bill_user`, `bill_note`, `bill_time`) VALUES
+(1, 'buy', NULL, 2, 3, 1, 1000000, 500000, 2, 'sffg', '2019-06-10 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -43,8 +70,7 @@ CREATE TABLE `dong_customer` (
 --
 
 INSERT INTO `dong_customer` (`customer_id`, `customer_name`, `customer_address`, `customer_phone`, `customer_handbag`, `customer_sizebag`, `customer_time`) VALUES
-(1, 'Nguyễn Văn Đông', 'Do Hạ', '966624292', 1, 17, '2019-06-09 12:00:09'),
-(3, 'Nguyen Van Dong', 'tien phong, me linh', '969392114', 2, 17, '2019-06-09 21:31:19');
+(6, 'Nguyễn Văn Đông', 'Do Hạ', '966624292', 4, 22, '2019-06-10 09:31:17');
 
 -- --------------------------------------------------------
 
@@ -109,6 +135,12 @@ INSERT INTO `dong_users` (`user_id`, `user_name`, `user_password`, `user_fullnam
 --
 
 --
+-- Chỉ mục cho bảng `dong_bill`
+--
+ALTER TABLE `dong_bill`
+  ADD PRIMARY KEY (`bill_id`);
+
+--
 -- Chỉ mục cho bảng `dong_customer`
 --
 ALTER TABLE `dong_customer`
@@ -131,10 +163,16 @@ ALTER TABLE `dong_users`
 --
 
 --
+-- AUTO_INCREMENT cho bảng `dong_bill`
+--
+ALTER TABLE `dong_bill`
+  MODIFY `bill_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT cho bảng `dong_customer`
 --
 ALTER TABLE `dong_customer`
-  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT cho bảng `dong_metadata`

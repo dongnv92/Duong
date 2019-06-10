@@ -37,6 +37,7 @@ define('_DB_DATABASE', 'duong');
 define('_DB_TABLE_USERS', 'dong_users');
 define('_DB_TABLE_METADATA', 'dong_metadata');
 define('_DB_TABLE_CUSTOMER', 'dong_customer');
+define('_DB_TABLE_BILL', 'dong_bill');
 
 $function_duong = new functionDuong();
 $db_duong       = new Database(_DB_HOST, _DB_USERNAME, _DB_PASSWORD, _DB_DATABASE);

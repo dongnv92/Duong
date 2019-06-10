@@ -95,25 +95,13 @@ $header['title'] = (isset($header['title']) ? $header['title'] : 'Trang Quản T
                 <i class="la la-ellipsis-h ft-minus" data-toggle="tooltip" data-placement="right" data-original-title="Layouts"></i>
             </li>
             <li class=" nav-item">
-                <a href="#"><i class="la la-list-alt"></i><span class="menu-title">Đơn hàng</span></a>
+                <a href="#"><i class="la la-list-alt"></i><span class="menu-title">Quản lý hàng nhập</span></a>
                 <ul class="menu-content">
-                    <li <?php echo ($admin_module == 'purchase' && in_array($type, array('')) && !$act) ? 'class="active"' : '';?>>
-                        <a class="menu-item" href="<?php echo _URL_ADMIN;?>/purchase.php"><i class="ft-list"></i> Đơn hàng của bạn</a>
+                    <li <?php echo ($header['module'] == 'buy' && in_array($act, array(''))) ? 'class="active"' : '';?>>
+                        <a class="menu-item" href="<?=_CONFIG_URL_HOME?>/buy.php"><i class="ft-list"></i> Danh sách hàng nhập</a>
                     </li>
-                    <li <?php echo ($admin_module == 'purchase' && in_array($type, array('review')) && !$act) ? 'class="active"' : '';?>>
-                        <a class="menu-item" href="<?php echo _URL_ADMIN;?>/purchase.php?type=review"><i class="ft-clock"></i> Đang xét duyệt</a>
-                    </li>
-                    <li <?php echo ($admin_module == 'purchase' && in_array($type, array('pickup')) && !$act) ? 'class="active"' : '';?>>
-                        <a class="menu-item" href="<?php echo _URL_ADMIN;?>/purchase.php?type=pickup"><i class="la la-coffee"></i> Đang lấy hàng</a>
-                    </li>
-                    <li <?php echo ($admin_module == 'purchase' && in_array($type, array('delivery')) && !$act) ? 'class="active"' : '';?>>
-                        <a class="menu-item" href="<?php echo _URL_ADMIN;?>/purchase.php?type=delivery"><i class="la la-truck"></i> Đang giao</a>
-                    </li>
-                    <li <?php echo ($admin_module == 'purchase' && in_array($type, array('done')) && !$act) ? 'class="active"' : '';?>>
-                        <a class="menu-item" href="<?php echo _URL_ADMIN;?>/purchase.php?type=done"><i class="la la-hand-peace-o"></i> Đã giao</a>
-                    </li>
-                    <li <?php echo ($admin_module == 'purchase' && in_array($type, array('cancel')) && !$act) ? 'class="active"' : '';?>>
-                        <a class="menu-item" href="<?php echo _URL_ADMIN;?>/purchase.php?type=cancel"><i class="la la-undo"></i> Đã hủy</a>
+                    <li <?php echo ($header['module'] == 'buy' && in_array($act, array('add'))) ? 'class="active"' : '';?>>
+                        <a class="menu-item" href="<?=_CONFIG_URL_HOME?>/buy.php?act=add"><i class="ft-list"></i> Thêm hàng nhập</a>
                     </li>
                 </ul>
             </li>
@@ -151,9 +139,9 @@ $header['title'] = (isset($header['title']) ? $header['title'] : 'Trang Quản T
                             <i class="ft-user"></i> Danh sách khách hàng
                         </a>
                     </li>
-                    <li <?php echo ($admin_module == 'users' && $act == 'add') ? 'class="active"' : '';?>>
-                        <a class="menu-item" href="<?php echo _URL_ADMIN;?>/users.php?act=add">
-                            <i class="ft-user-plus"></i> Thêm thành viên
+                    <li <?php echo ($header['module'] == 'customer' && $act == 'add') ? 'class="active"' : '';?>>
+                        <a class="menu-item" href="<?=_CONFIG_URL_HOME?>/customer.php?act=add">
+                            <i class="ft-user-plus"></i> Thêm khách hàng
                         </a>
                     </li>
                 </ul>

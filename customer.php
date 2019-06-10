@@ -5,6 +5,59 @@ if(!$user){
 }
 $header['module'] = 'customer';
 switch ($act){
+    case 'add':
+        $header['title']    = 'Thêm khách hàng';
+        $css_plus           = ['assets/vendors/css/extensions/sweetalert.css', 'assets/css/plugins/animate/animate.min.css'];
+        $js_plus            = ['custom.js?act=customer', 'assets/vendors/js/extensions/sweetalert.min.js'];
+        require_once 'header.php';
+        ?>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card border-left-blue border-right-blue">
+                    <div class="card-header"><h4 class="card-title">Thêm khách hàng</h4> </div>
+                    <div class="card-body">
+                        <fieldset class="form-group floating-label-form-group">
+                            <label>Tên khách hàng</label>
+                            <input type="text" class="form-control round" name="customer_name" placeholder="Nhập tên khách hàng">
+                        </fieldset>
+                        <fieldset class="form-group floating-label-form-group">
+                            <label for="title">Địa chỉ khách hàng</label>
+                            <input type="text" class="form-control round" name="customer_address" placeholder="Nhập địa chỉ khách hàng">
+                        </fieldset>
+                        <fieldset class="form-group floating-label-form-group">
+                            <label for="title">Số điện thoại khách hàng</label>
+                            <input type="text" class="form-control round" name="customer_phone" placeholder="Nhập số điện thoại khách hàng">
+                        </fieldset>
+                        <fieldset class="form-group floating-label-form-group">
+                            <label for="title">Kiểu túi khách hàng hay sử dụng</label>
+                            <select name="customer_handbag" class="form-control round">
+                                <option value="0">-- Chọn 1 loại kiểu túi --</option>
+                                <?php
+                                foreach ($db_duong->select('metadata_id, metadata_name')->from(_DB_TABLE_METADATA)->where('metadata_type', 'handbag')->fetch() AS $handbag){
+                                    echo '<option value="'. $handbag['metadata_id'] .'">'. $handbag['metadata_name'] .'</option>';
+                                }
+                                ?>
+                            </select>
+                        </fieldset>
+                        <fieldset class="form-group floating-label-form-group">
+                            <label for="title">Kích thước túi khách hàng hay sử dụng</label>
+                            <select name="customer_sizedbag" class="form-control round">
+                                <option value="0">-- Chọn 1 loại kích thước --</option>
+                                <?php
+                                foreach ($db_duong->select('metadata_id, metadata_name')->from(_DB_TABLE_METADATA)->where('metadata_type', 'sizebag')->fetch() AS $sizebag){
+                                    echo '<option value="'. $sizebag['metadata_id'] .'">'. $sizebag['metadata_name'] .'</option>';
+                                }
+                                ?>
+                            </select>
+                        </fieldset>
+                    </div>
+                    <div class="card-footer text-right"><button class="btn btn-outline-blue round" id="submit_addcustomer">Thêm khách hàng</button></div>
+                </div>
+            </div>
+        </div>
+        <?php
+        require_once 'footer.php';
+        break;
     default:
         $data_where = [];
         // Tính tổng số lượng product
@@ -27,7 +80,7 @@ switch ($act){
         require_once 'header.php';
         ?>
         <div class="row">
-            <div id="recent-sales" class="col-12 col-md-12">
+            <div class="col-12 col-md-12">
                 <div class="card">
                     <div class="card-header">
                         <h4 class="card-title">Danh sách khách hàng</h4>
@@ -114,7 +167,7 @@ switch ($act){
                                         $sizebag = $db_duong->select('metadata_name')->from(_DB_TABLE_METADATA)->where('metadata_id', $customer['customer_sizebag'])->fetch_first();
                                         echo '<tr id="tr_'. $customer['customer_id'] .'">';
                                             echo '<td>';
-                                                echo '<a href="javascript:;" data-toggle="modal" data-target="#customer_update_modal_'. $customer['customer_id'] .'" data-text="customer_update" data-content="'. $customer['customer_id'] .'">'. $customer['customer_name'] .'</a>';
+                                                echo '<a href="javascript:;" data-toggle="modal" data-target="#customer_update_modal_'. $customer['customer_id'] .'">'. $customer['customer_name'] .'</a>';
                                                 ?>
                                                 <!-- Modal -->
                                                 <div class="modal animated zoomIn text-left" id="customer_update_modal_<?=$customer['customer_id']?>" tabindex="-1" role="dialog" aria-hidden="true">
@@ -164,7 +217,7 @@ switch ($act){
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <input type="reset" class="btn btn-outline-secondary round" data-dismiss="modal" value="Đóng">
-                                                                <button class="btn btn-outline-blue round" id="submit_updatecustomer">Cập nhật khách hàng</button>
+                                                                <button class="btn btn-outline-blue round" data-text="submit_updatecustomer" data-content="<?=$customer['customer_id']?>">Cập nhật khách hàng</button>
                                                             </div>
                                                         </div>
                                                     </div>

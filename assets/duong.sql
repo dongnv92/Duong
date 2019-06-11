@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th6 10, 2019 lúc 12:29 PM
+-- Thời gian đã tạo: Th6 11, 2019 lúc 12:28 PM
 -- Phiên bản máy phục vụ: 10.1.35-MariaDB
 -- Phiên bản PHP: 7.2.9
 
@@ -47,7 +47,9 @@ CREATE TABLE `dong_bill` (
 --
 
 INSERT INTO `dong_bill` (`bill_id`, `bill_type`, `bill_customer`, `bill_handbag`, `bill_sizebag`, `bill_amount`, `bill_price`, `bill_total_price`, `bill_user`, `bill_note`, `bill_time`) VALUES
-(1, 'buy', NULL, 2, 3, 1, 1000000, 500000, 2, 'sffg', '2019-06-10 00:00:00');
+(4, 'buy', 0, 4, 16, 850, 1250000, 1062500, 1, 'Đông Update', '2019-06-10 10:13:47'),
+(6, 'buy', 0, 3, 21, 450, 1460000, 657000, 1, 'Update 2', '2019-06-11 14:48:51'),
+(7, 'sell', 7, 4, 19, 500, 1650000, 825000, 1, '', '2019-06-11 14:49:49');
 
 -- --------------------------------------------------------
 
@@ -70,7 +72,8 @@ CREATE TABLE `dong_customer` (
 --
 
 INSERT INTO `dong_customer` (`customer_id`, `customer_name`, `customer_address`, `customer_phone`, `customer_handbag`, `customer_sizebag`, `customer_time`) VALUES
-(6, 'Nguyễn Văn Đông', 'Do Hạ', '966624292', 4, 22, '2019-06-10 09:31:17');
+(6, 'Nguyễn Văn Đông', 'Do Hạ', '966624292', 4, 22, '2019-06-10 09:31:17'),
+(7, 'Nguyễn văn Dương', 'Do Hạ', '96663263', 4, 22, '2019-06-11 14:48:19');
 
 -- --------------------------------------------------------
 
@@ -166,7 +169,7 @@ ALTER TABLE `dong_users`
 -- AUTO_INCREMENT cho bảng `dong_bill`
 --
 ALTER TABLE `dong_bill`
-  MODIFY `bill_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `bill_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT cho bảng `dong_customer`

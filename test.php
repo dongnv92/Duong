@@ -1,8 +1,4 @@
 <?php
 require_once 'src/core.php';
 
-if($db_duong->select('user_id')->from(_DB_TABLE_USERS)->where('user_id', 1)->fetch_first()){
-    echo "Có";
-}else{
-    echo "Không";
-}
+echo date('Y-m-d 00:00:00', strtotime('11-06-2019'));

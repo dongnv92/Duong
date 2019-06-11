@@ -6,7 +6,36 @@ switch ($act){
     case 'bill':
         ?>
         //<script>
+        $(".pickadate").pickadate({
+            monthPrev   : "&larr;",
+            monthNext   : "&larr;",
+            format      : "dd-mm-yyyy",
+            formatSubmit: "mm/dd/yyyy",
+            hiddenPrefix: "prefix__",
+            hiddenSuffix: "__suffix"
+        });
         $(document).ready(function () {
+
+            // Search
+            $('#bill_search').click(function () {
+                var type            = $(this).attr('data-type');
+                var date_start      = $('input[name=date_start]').val();
+                var date_end        = $('input[name=date_end]').val();
+                var bill_handbag    = $('select[name=bill_handbag]').val();
+                var bill_sizebag    = $('select[name=bill_sizebag]').val();
+                var bill_user       = $('select[name=bill_user]').val();
+
+                $(location).attr('href', '<?=_CONFIG_URL_HOME?>/bill.php?type='+type+
+                    (date_start     ? '&date_start='+date_start : '')+
+                    (date_end       ? '&date_end='+date_end: '')+
+                    (bill_handbag   ? '&bill_handbag='+bill_handbag : '')+
+                    (bill_sizebag   ? '&bill_sizebag='+bill_sizebag : '')+
+                    (bill_user      ? '&bill_user='+bill_user : '')
+                );
+
+                return false;
+            });
+
             // Add Bill
             $('#bill_add').click(function () {
                 var bill_type       = $(this).attr('data-content');

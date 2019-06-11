@@ -193,12 +193,36 @@ switch ($act){
                 break;
         }
 
-        $data_where = [
-            'bill_type' => $type
-        ];
+        $date_start     = isset($_GET['date_start'])    && !empty($_GET['date_start'])      ? trim($_GET['date_start'])     : '';
+        $date_end       = isset($_GET['date_end'])      && !empty($_GET['date_end'])        ? trim($_GET['date_end'])       : '';
+        $bill_handbag   = isset($_GET['bill_handbag'])  && !empty($_GET['bill_handbag'])    ? trim($_GET['bill_handbag'])   : '';
+        $bill_sizebag   = isset($_GET['bill_sizebag'])  && !empty($_GET['bill_sizebag'])    ? trim($_GET['bill_sizebag'])   : '';
+        $bill_user      = isset($_GET['bill_user'])     && !empty($_GET['bill_user'])       ? trim($_GET['bill_user'])      : '';
+        $bill_customer  = isset($_GET['bill_customer']) && !empty($_GET['bill_customer'])   ? trim($_GET['bill_customer'])  : '';
+
+        $data_where                         = [];
+        $data_where['bill_type']            = $type;
+        if($bill_handbag){
+            $data_where['bill_handbag']     = $bill_handbag;
+        }
+        if($bill_sizebag){
+            $data_where['bill_sizebag']     = $bill_sizebag;
+        }
+        if($bill_user){
+            $data_where['bill_user']        = $bill_user;
+        }
+        if($bill_customer){
+            $data_where['bill_customer']    = $bill_customer;
+        }
 
         // Tính tổng số lượng product
-        $db_duong->select('bill_id')->from(_DB_TABLE_BILL)->where($data_where)->execute();
+        $db_duong->select('bill_id')->from(_DB_TABLE_BILL)->where($data_where);
+        if($date_start && $date_end){
+            $date_start = date('Y-m-d 00:00:00', strtotime($date_start));
+            $date_end   = date('Y-m-d 23:59:59', strtotime($date_end));
+            $db_duong->between('bill_time', $date_start, $date_end);
+        }
+        $db_duong->execute();
         $pagination['count']        = $db_duong->affected_rows;
         $pagination['page_row']     = _CONFIG_PAGINATION;
         $pagination['page_num']     = ceil($pagination['count']/$pagination['page_row']);
@@ -207,12 +231,22 @@ switch ($act){
 
         // Hiển thị dữ liệu
         $db_duong->from(_DB_TABLE_BILL)->where($data_where);
+        if($date_start && $date_end){
+            $db_duong->between('bill_time', $date_start, $date_end);
+        }
         $db_duong->limit(_CONFIG_PAGINATION, $pagination['page_start']);
         $db_duong->order_by('bill_id', 'desc');
         $datas              = $db_duong->fetch();
         $header['title']    = $lang['title'];
-        $css_plus           = ['assets/vendors/css/extensions/sweetalert.css'];
-        $js_plus            = ['custom.js?act=bill', 'assets/vendors/js/extensions/sweetalert.min.js'];
+        $css_plus           = ['assets/vendors/css/extensions/sweetalert.css','assets/vendors/css/pickers/pickadate/pickadate.css'];
+        $js_plus            = [
+            'assets/vendors/js/extensions/sweetalert.min.js',
+            'assets/vendors/js/pickers/pickadate/picker.js',
+            'assets/vendors/js/pickers/pickadate/picker.date.js',
+            'assets/vendors/js/pickers/pickadate/picker.time.js',
+            'assets/vendors/js/pickers/pickadate/legacy.js',
+            'custom.js?act=bill'
+        ];
         require_once 'header.php';
         ?>
         <div class="row">
@@ -220,76 +254,100 @@ switch ($act){
             switch ($type){
                 case 'buy':
                     ?>
-                    <div class="col-md-3 text-center">
-                        <select class="form-control round border-blue">
+                    <div class="col-md-2 text-center">
+                        <div class="input-group">
+                            <div class="input-group-prepend"><span class="input-group-text"><span class="la la-calendar-o"></span></span></div>
+                            <input type='text' name="date_start" value="<?=$_GET['date_start']?$_GET['date_start']: ''?>" class="form-control pickadate datepicker round" placeholder="Từ ngày" />
+                        </div>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <div class="input-group">
+                            <div class="input-group-prepend"><span class="input-group-text"><span class="la la-calendar-o"></span></span></div>
+                            <input type='text' name="date_end" value="<?=$_GET['date_end']?$_GET['date_end']: ''?>" class="form-control pickadate datepicker round" placeholder="Đến ngày" />
+                        </div>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <select name="bill_handbag" class="form-control round border-blue">
                             <option value="">-- Chọn kiểu túi --</option>
                             <?php
                             foreach ($db_duong->select('metadata_id, metadata_name')->from(_DB_TABLE_METADATA)->where('metadata_type', 'handbag')->fetch() AS $handbag){
-                                echo '<option value="'. $handbag['metadata_id'] .'">'. $handbag['metadata_name'] .'</option>';
+                                echo '<option value="'. $handbag['metadata_id'] .'" '. ($_GET['bill_handbag'] == $handbag['metadata_id'] ? 'selected' : '') .'>'. $handbag['metadata_name'] .'</option>';
                             }
                             ?>
                         </select>
                     </div>
-                    <div class="col-md-3 text-center">
-                        <select class="form-control round border-blue">
+                    <div class="col-md-2 text-center">
+                        <select name="bill_sizebag" class="form-control round border-blue">
                             <option value="">-- Chọn kích thước túi --</option>
                             <?php
-                            foreach ($db_duong->select('metadata_id, metadata_name')->from(_DB_TABLE_METADATA)->where('metadata_type', 'handbag')->fetch() AS $sizebag){
-                                echo '<option value="'. $handbag['metadata_id'] .'">'. $handbag['metadata_name'] .'</option>';
+                            foreach ($db_duong->select('metadata_id, metadata_name')->from(_DB_TABLE_METADATA)->where('metadata_type', 'sizebag')->fetch() AS $sizebag){
+                                echo '<option value="'. $sizebag['metadata_id'] .'" '. ($_GET['bill_sizebag'] == $sizebag['metadata_id'] ? 'selected' : '') .'>'. $sizebag['metadata_name'] .'</option>';
                             }
                             ?>
                         </select>
                     </div>
-                    <div class="col-md-3 text-center">
-                        <select class="form-control round border-blue">
+                    <div class="col-md-2 text-center">
+                        <select name="bill_user" class="form-control round border-blue">
                             <option value="">-- Chọn người nhập liệu --</option>
+                            <?php
+                            foreach ($db_duong->select('user_id, user_fullname')->from(_DB_TABLE_USERS)->fetch() AS $select_user){
+                                echo '<option value="'. $select_user['user_id'] .'"   '. ($_GET['bill_user'] == $select_user['user_id'] ? 'selected' : '') .'>'. $select_user['user_fullname'] .'</option>';
+                            }
+                            ?>
                         </select>
                     </div>
-                    <div class="col-md-3 text-right">
-                        <button class="btn btn-outline-blue round" style="width: 100%">Lọc dữ liệu</button>
+                    <div class="col-md-2 text-right">
+                        <button class="btn btn-outline-blue round" id="bill_search" data-type="<?=$type?>" style="width: 100%">Lọc dữ liệu</button>
                     </div>
                     <?php
                     break;
                 case 'sell':
                 ?>
-                <div class="col-md-2 text-center">
-                    <select class="form-control round border-blue">
-                        <option value="">-- Khách hàng --</option>
-                        <?php
-                        foreach ($db_duong->select('customer_id, customer_name')->from(_DB_TABLE_CUSTOMER)->fetch() AS $customer){
-                            echo '<option value="'. $customer['customer_id'] .'">'. $customer['customer_name'] .'</option>';
-                        }
-                        ?>
-                    </select>
-                </div>
-                <div class="col-md-2 text-center">
-                    <select class="form-control round border-blue">
-                        <option value="">-- Chọn kiểu túi --</option>
-                        <?php
-                        foreach ($db_duong->select('metadata_id, metadata_name')->from(_DB_TABLE_METADATA)->where('metadata_type', 'handbag')->fetch() AS $handbag){
-                            echo '<option value="'. $handbag['metadata_id'] .'">'. $handbag['metadata_name'] .'</option>';
-                        }
-                        ?>
-                    </select>
-                </div>
-                <div class="col-md-2 text-center">
-                    <select class="form-control round border-blue">
-                        <option value="">-- Chọn kích thước túi --</option>
-                        <?php
-                        foreach ($db_duong->select('metadata_id, metadata_name')->from(_DB_TABLE_METADATA)->where('metadata_type', 'handbag')->fetch() AS $sizebag){
-                            echo '<option value="'. $handbag['metadata_id'] .'">'. $handbag['metadata_name'] .'</option>';
-                        }
-                        ?>
-                    </select>
-                </div>
-                <div class="col-md-2 text-center">
-                    <select class="form-control round border-blue">
-                        <option value="">-- Chọn người nhập liệu --</option>
-                    </select>
-                </div>
-                <div class="col-md-2 text-right">
-                    <button class="btn btn-outline-blue round" style="width: 100%">Lọc dữ liệu</button>
-                </div>
+                    <div class="col-md-2 text-center">
+                        <div class="input-group">
+                            <div class="input-group-prepend"><span class="input-group-text"><span class="la la-calendar-o"></span></span></div>
+                            <input type='text' name="date_start" value="<?=$_GET['date_start']?$_GET['date_start']: ''?>" class="form-control pickadate datepicker round" placeholder="Từ ngày" />
+                        </div>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <div class="input-group">
+                            <div class="input-group-prepend"><span class="input-group-text"><span class="la la-calendar-o"></span></span></div>
+                            <input type='text' name="date_end" value="<?=$_GET['date_end']?$_GET['date_end']: ''?>" class="form-control pickadate datepicker round" placeholder="Đến ngày" />
+                        </div>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <select name="bill_handbag" class="form-control round border-blue">
+                            <option value="">-- Chọn kiểu túi --</option>
+                            <?php
+                            foreach ($db_duong->select('metadata_id, metadata_name')->from(_DB_TABLE_METADATA)->where('metadata_type', 'handbag')->fetch() AS $handbag){
+                                echo '<option value="'. $handbag['metadata_id'] .'" '. ($_GET['bill_handbag'] == $handbag['metadata_id'] ? 'selected' : '') .'>'. $handbag['metadata_name'] .'</option>';
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <select name="bill_sizebag" class="form-control round border-blue">
+                            <option value="">-- Chọn kích thước túi --</option>
+                            <?php
+                            foreach ($db_duong->select('metadata_id, metadata_name')->from(_DB_TABLE_METADATA)->where('metadata_type', 'sizebag')->fetch() AS $sizebag){
+                                echo '<option value="'. $sizebag['metadata_id'] .'" '. ($_GET['bill_sizebag'] == $sizebag['metadata_id'] ? 'selected' : '') .'>'. $sizebag['metadata_name'] .'</option>';
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <select name="bill_user" class="form-control round border-blue">
+                            <option value="">-- Chọn người nhập liệu --</option>
+                            <?php
+                            foreach ($db_duong->select('user_id, user_fullname')->from(_DB_TABLE_USERS)->fetch() AS $bill_user){
+                                echo '<option value="'. $bill_user['user_id'] .'"   '. ($_GET['bill_user'] == $bill_user['user_id'] ? 'selected' : '') .'>'. $bill_user['user_fullname'] .'</option>';
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="col-md-2 text-right">
+                        <button class="btn btn-outline-blue round" id="bill_search" data-type="<?=$type?>" style="width: 100%">Lọc dữ liệu</button>
+                    </div>
                 <?php
                 break;
             }

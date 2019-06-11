@@ -18,6 +18,7 @@ $header['title'] = (isset($header['title']) ? $header['title'] : 'Trang Quản T
     <link rel="stylesheet" type="text/css" href="assets/css/app.css">
     <link rel="stylesheet" type="text/css" href="assets/css/core/menu/menu-types/vertical-menu.css">
     <link rel="stylesheet" type="text/css" href="assets/css/core/colors/palette-gradient.css">
+    <link rel="stylesheet" type="text/css" href="assets/fonts/simple-line-icons/style.min.css">
     <?php foreach ($css_plus AS $css){?>
     <link rel="stylesheet" type="text/css" href="<?php echo $css;?>">
     <?php }?>
@@ -95,20 +96,25 @@ $header['title'] = (isset($header['title']) ? $header['title'] : 'Trang Quản T
                 <i class="la la-ellipsis-h ft-minus" data-toggle="tooltip" data-placement="right" data-original-title="Layouts"></i>
             </li>
             <li class=" nav-item">
-                <a href="#"><i class="la la-list-alt"></i><span class="menu-title">Quản lý hàng nhập</span></a>
+                <a href="#"><i class="icon-logout"></i><span class="menu-title"> Quản lý hàng nhập</span></a>
                 <ul class="menu-content">
-                    <li <?php echo ($header['module'] == 'buy' && in_array($act, array(''))) ? 'class="active"' : '';?>>
-                        <a class="menu-item" href="<?=_CONFIG_URL_HOME?>/buy.php"><i class="ft-list"></i> Danh sách hàng nhập</a>
+                    <li <?php echo ($header['module'] == 'bill' && in_array($type, array('buy')) && in_array($act, ['', 'update'])) ? 'class="active"' : '';?>>
+                        <a class="menu-item" href="<?=_CONFIG_URL_HOME?>/bill.php?type=buy"><i class="ft-list"></i> Danh sách hàng nhập về</a>
                     </li>
-                    <li <?php echo ($header['module'] == 'buy' && in_array($act, array('add'))) ? 'class="active"' : '';?>>
-                        <a class="menu-item" href="<?=_CONFIG_URL_HOME?>/buy.php?act=add"><i class="ft-list"></i> Thêm hàng nhập</a>
+                    <li <?php echo ($header['module'] == 'bill' && $act == 'add' && $type == 'buy') ? 'class="active"' : '';?>>
+                        <a class="menu-item" href="<?=_CONFIG_URL_HOME?>/bill.php?act=add&type=buy"><i class="ft-file-plus"></i> Thêm hàng nhập về</a>
                     </li>
                 </ul>
             </li>
             <li class=" nav-item">
-                <a href="#"><i class="la la-money"></i><span class="menu-title">Hóa đơn</span></a>
+                <a href="#"><i class="icon-login"></i><span class="menu-title"> Quản lý hàng xuất</span></a>
                 <ul class="menu-content">
-                    <li <?php echo ($admin_module == 'payment' && in_array($type, array(''))) ? 'class="active"' : '';?>><a class="menu-item" href="<?php echo _URL_ADMIN;?>/payment.php"><i class="la la-clipboard"></i> Hóa đơn của bạn</a></li>
+                    <li <?php echo ($header['module'] == 'bill' && in_array($type, array('sell')) && in_array($act, ['', 'update'])) ? 'class="active"' : '';?>>
+                        <a class="menu-item" href="<?=_CONFIG_URL_HOME?>/bill.php?type=sell"><i class="ft-list"></i> Danh sách hàng xuất đi</a>
+                    </li>
+                    <li <?php echo ($header['module'] == 'bill' && $act == 'add' & $type == 'sell') ? 'class="active"' : '';?>>
+                        <a class="menu-item" href="<?=_CONFIG_URL_HOME?>/bill.php?act=add&type=sell"><i class="ft-file-plus"></i> Thêm hàng xuất đi</a>
+                    </li>
                 </ul>
             </li>
             <!-- BAN QUẢN TRỊ -->
@@ -117,7 +123,7 @@ $header['title'] = (isset($header['title']) ? $header['title'] : 'Trang Quản T
                 <i class="la la-diamond ft-minus" data-toggle="tooltip" data-placement="right" data-original-title="Layouts"></i>
             </li>
             <li class=" nav-item">
-                <a href="#"><i class="la la-suitcase"></i> <span class="menu-title">Quản lý túi</span></a>
+                <a href="#"><i class="ft-calendar"></i> <span class="menu-title">Quản lý túi</span></a>
                 <ul class="menu-content">
                     <li <?php echo ($header['module'] == 'metadata' && in_array($act, ['handbag'])) ? 'class="active"' : '';?>>
                         <a class="menu-item" href="<?=_CONFIG_URL_HOME?>/metadata.php?act=handbag">

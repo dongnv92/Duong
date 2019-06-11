@@ -2,6 +2,11 @@
 
 class functionDuong{
 
+    // Function hiển thị tiền thêm dấu chấm
+    function convertNumberMoney($number){
+        return number_format($number, 0,'', '.');
+    }
+
     public function redirectUrl($url){
         return header('location:'.$url);
     }

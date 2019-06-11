@@ -7,10 +7,154 @@ switch ($act){
         ?>
         //<script>
         $(document).ready(function () {
-            $('#billbuy_add').click(function () {
+            // Add Bill
+            $('#bill_add').click(function () {
+                var bill_type       = $(this).attr('data-content');
+                var bill_user       = $(this).attr('data-user');
+                var text            = $(this).html();
+                var bill_handbag    = $('select[name=bill_handbag]').val();
+                var bill_sizebag    = $('select[name=bill_sizebag]').val();
+                var bill_amount     = $('input[name=bill_amount]').val();
+                var bill_price      = $('input[name=bill_price]').val();
+                var bill_note       = $('textarea[name=bill_note]').val();
+                var bill_customer   = (bill_type == 'buy' ? '' : $('select[name=bill_customer]').val())
+
+                $.ajax({
+                    url         : '<?=_CONFIG_URL_API?>',
+                    method      : 'POST',
+                    dataType    : 'json',
+                    data        : {
+                        'act'           : 'bill',
+                        'type'          : 'add',
+                        'token'         : '<?=$function_duong->createToken()?>',
+                        'bill_handbag'  : bill_handbag,
+                        'bill_sizedbag' : bill_sizebag,
+                        'bill_amount'   : bill_amount,
+                        'bill_price'    : bill_price,
+                        'bill_note'     : bill_note,
+                        'bill_type'     : bill_type,
+                        'bill_customer' : bill_customer,
+                        'bill_user'     : bill_user
+                    },
+                    beforeSend  : function () {
+                        $('#bill_add').html('Đang thêm dữ liệu ...');
+                    },
+                    success     : function (data) {
+                        $('#bill_add').html(text);
+
+                        if(data.response == 200){
+                            $(location).attr('href', '<?=_CONFIG_URL_HOME?>/bill.php?type='+bill_type);
+                        }else{
+                            swal('Thêm dữ liệu', data.message, 'warning');
+                            return false;
+                        }
+                    }
+                });
 
                 return false;
             });
+
+            // Delete Bill
+            $('a[data-text=bill_delete]').click(function () {
+                var bill_id     = $(this).attr('data-content');
+                var bill_type   = $(this).attr('data-type');
+                var title       = bill_type == 'buy' ? 'Xóa hàng nhập về' : 'Xóa hàng xuất đi';
+
+                swal({
+                    title: title,
+                    text: 'Bạn có chắc chắc muốn xóa dữ liệu? Sau khi xóa, dữ liệu sẽ không khôi phục được!',
+                    icon: "warning",
+                    buttons: {
+                        cancel: {
+                            text: "Quay Lại",
+                            value: null,
+                            visible: true,
+                            className: "",
+                            closeModal: true,
+                        },
+                        confirm: {
+                            text: "Xóa Ngay",
+                            value: true,
+                            visible: true,
+                            className: "",
+                            closeModal: false
+                        }
+                    }
+                }).then((isConfirm) => {
+                    if (isConfirm) {
+                        $.ajax({
+                            url         : '<?=_CONFIG_URL_API?>',
+                            method      : 'GET',
+                            dataType    : 'json',
+                            data        : {
+                                'token'         : '<?=$function_duong->createToken()?>',
+                                'act'           : 'bill',
+                                'type'          : 'delete',
+                                'bill_type'     : bill_type,
+                                'bill_id'       : bill_id
+                            },
+                            success     : function (data) {
+                                if(data.response == 200){
+                                    $('#tr_'+bill_id).remove();
+                                    swal(title, data.message, 'success');
+                                    return false;
+                                }else{
+                                    swal(title, data.message, 'error');
+                                    return false;
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+
+            // Update Bill
+            $('#bill_update').click(function () {
+                var bill_type       = $(this).attr('data-type');
+                var bill_id         = $(this).attr('data-id');
+                var buttonText      = $(this).html();
+                var bill_handbag    = $('select[name=bill_handbag]').val();
+                var bill_sizebag    = $('select[name=bill_sizebag]').val();
+                var bill_amount     = $('input[name=bill_amount]').val();
+                var bill_price      = $('input[name=bill_price]').val();
+                var bill_note       = $('textarea[name=bill_note]').val();
+                var bill_customer   = (bill_type == 'buy' ? '' : $('select[name=bill_customer]').val());
+
+                $.ajax({
+                    url         : '<?=_CONFIG_URL_API?>',
+                    method      : 'POST',
+                    dataType    : 'json',
+                    data        : {
+                        'act'           : 'bill',
+                        'type'          : 'update',
+                        'token'         : '<?=$function_duong->createToken()?>',
+                        'bill_id'       : bill_id,
+                        'bill_handbag'  : bill_handbag,
+                        'bill_sizedbag' : bill_sizebag,
+                        'bill_amount'   : bill_amount,
+                        'bill_price'    : bill_price,
+                        'bill_note'     : bill_note,
+                        'bill_type'     : bill_type,
+                        'bill_customer' : bill_customer
+                    },
+                    beforeSend  : function () {
+                        $('#bill_update').html(buttonText);
+                    },
+                    success     : function (data) {
+                        $('#bill_update').html('Đang cập nhật dữ liệu ...');
+                        if(data.response == 200){
+                            swal('Cập nhật dữ liệu', data.message, 'success');
+                            return false;
+                        }else{
+                            swal('Cập nhật dữ liệu', data.message, 'warning');
+                            return false;
+                        }
+                    }
+                });
+
+                return false;
+            });
+
         });
         //</script>
         <?php

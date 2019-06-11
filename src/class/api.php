@@ -17,6 +17,76 @@ if(!$function_duong->checkToken($token)){
 switch ($act){
     case 'bill':
         switch ($type){
+            case 'update':
+                $bill_handbag   = isset($_POST['bill_handbag'])     && !empty($_POST['bill_handbag'])   ? $_POST['bill_handbag']    : '';
+                $bill_sizedbag  = isset($_POST['bill_sizedbag'])    && !empty($_POST['bill_sizedbag'])  ? $_POST['bill_sizedbag']   : '';
+                $bill_amount    = isset($_POST['bill_amount'])      && !empty($_POST['bill_amount'])    ? $_POST['bill_amount']     : '';
+                $bill_price     = isset($_POST['bill_price'])       && !empty($_POST['bill_price'])     ? $_POST['bill_price']      : '';
+                $bill_note      = isset($_POST['bill_note'])        && !empty($_POST['bill_note'])      ? $_POST['bill_note']       : '';
+                $bill_customer  = isset($_POST['bill_customer'])    && !empty($_POST['bill_customer'])  ? $_POST['bill_customer']   : '';
+                $bill_type      = isset($_POST['bill_type'])        && !empty($_POST['bill_type'])      ? $_POST['bill_type']       : '';
+                $bill_id        = isset($_POST['bill_id'])          && !empty($_POST['bill_id'])        ? $_POST['bill_id']         : '';
+
+                $data_where = ['bill_type' => $bill_type, 'bill_id' => $bill_id];
+                if(!$db_duong->from(_DB_TABLE_BILL)->where($data_where)->fetch_first()){
+                    echo json_encode(['response' => 404, 'message' => 'Dữ liệu không tồn tại']);
+                    break;
+                }
+                if(!$bill_handbag){
+                    echo json_encode(['response' => 404, 'message' => 'Bạn chưa nhập loại túi']);
+                    break;
+                }
+                if(!$db_duong->select('metadata_id')->from(_DB_TABLE_METADATA)->where(['metadata_id' => $bill_handbag, 'metadata_type' => 'handbag'])->fetch_first()){
+                    echo json_encode(['response' => 404, 'message' => 'Loại túi không tồn tại']);
+                    break;
+                }
+                if(!$bill_sizedbag){
+                    echo json_encode(['response' => 404, 'message' => 'Bạn chưa nhập kích thước túi']);
+                    break;
+                }
+                if(!$db_duong->select('metadata_id')->from(_DB_TABLE_METADATA)->where(['metadata_id' => $bill_sizedbag, 'metadata_type' => 'sizebag'])->fetch_first()){
+                    echo json_encode(['response' => 404, 'message' => 'Kích thước túi không tồn tại']);
+                    break;
+                }
+                if(!$bill_amount){
+                    echo json_encode(['response' => 404, 'message' => 'Bạn chưa nhập số lượng']);
+                    break;
+                }
+                if(!filter_var($bill_amount, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0]])){
+                    echo json_encode(['response' => 404, 'message' => 'Số lượng không đúng định dạng số']);
+                    break;
+                }
+                if(!$bill_price){
+                    echo json_encode(['response' => 404, 'message' => 'Bạn chưa nhập giá']);
+                    break;
+                }
+                if(!filter_var($bill_price, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0]])){
+                    echo json_encode(['response' => 404, 'message' => 'Đơn giá không đúng định dạng số']);
+                    break;
+                }
+                if(!in_array($bill_type, ['buy', 'sell'])){
+                    echo json_encode(['response' => 404, 'message' => 'Kiểu Bill không đúng định dạng']);
+                    break;
+                }
+                if($bill_customer && !$db_duong->select('customer_id')->from(_DB_TABLE_CUSTOMER)->where('customer_id', $bill_customer)->fetch_first()){
+                    echo json_encode(['response' => 404, 'message' => 'Khách hàng không tồn tại']);
+                    break;
+                }
+                $data = [
+                    'bill_customer'     => $bill_customer,
+                    'bill_handbag'      => $bill_handbag,
+                    'bill_sizebag'      => $bill_sizedbag,
+                    'bill_amount'       => $bill_amount,
+                    'bill_price'        => $bill_price,
+                    'bill_total_price'  => (($bill_amount*$bill_price)/1000),
+                    'bill_note'         => $bill_note
+                ];
+                if(!$db_duong->where($data_where)->update(_DB_TABLE_BILL, $data)){
+                    echo json_encode(['response' => 404, 'message' => 'Lỗi SQL khi cập nhật dữ liệu']);
+                    break;
+                }
+                echo json_encode(['response' => 200, 'message' => 'Cập nhật dữ liệu thành công :)']);
+                break;
             case 'add':
                 $bill_handbag   = isset($_POST['bill_handbag'])     && !empty($_POST['bill_handbag'])   ? $_POST['bill_handbag']    : '';
                 $bill_sizedbag  = isset($_POST['bill_sizedbag'])    && !empty($_POST['bill_sizedbag'])  ? $_POST['bill_sizedbag']   : '';
@@ -39,7 +109,7 @@ switch ($act){
                     echo json_encode(['response' => 404, 'message' => 'Bạn chưa nhập kích thước túi']);
                     break;
                 }
-                if(!$db_duong->select('metadata_id')->from(_DB_TABLE_METADATA)->where(['metadata_id' => $bill_handbag, 'metadata_type' => 'sizebag'])->fetch_first()){
+                if(!$db_duong->select('metadata_id')->from(_DB_TABLE_METADATA)->where(['metadata_id' => $bill_sizedbag, 'metadata_type' => 'sizebag'])->fetch_first()){
                     echo json_encode(['response' => 404, 'message' => 'Kích thước túi không tồn tại']);
                     break;
                 }
@@ -47,8 +117,16 @@ switch ($act){
                     echo json_encode(['response' => 404, 'message' => 'Bạn chưa nhập số lượng']);
                     break;
                 }
+                if(!filter_var($bill_amount, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0]])){
+                    echo json_encode(['response' => 404, 'message' => 'Số lượng không đúng định dạng số']);
+                    break;
+                }
                 if(!$bill_price){
                     echo json_encode(['response' => 404, 'message' => 'Bạn chưa nhập giá']);
+                    break;
+                }
+                if(!filter_var($bill_price, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0]])){
+                    echo json_encode(['response' => 404, 'message' => 'Đơn giá không đúng định dạng số']);
                     break;
                 }
                 if(!in_array($bill_type, ['buy', 'sell'])){
@@ -79,7 +157,25 @@ switch ($act){
                     echo json_encode(['response' => 404, 'message' => 'Lỗi SQL khi thêm hóa đơn']);
                     break;
                 }
-                echo json_encode(['response' => 404, 'message' => 'Người lập hóa đơn không tổn tại']);
+                echo json_encode(['response' => 200, 'message' => 'Thêm dữ liệu thành công']);
+                break;
+            case 'delete':
+                $bill_type  = isset($_GET['bill_type'])    && !empty($_GET['bill_type'])  ? $_GET['bill_type']   : '';
+                $bill_id    = isset($_GET['bill_id'])      && !empty($_GET['bill_id'])    ? $_GET['bill_id']     : '';
+                if(!$bill_id || !$bill_type){
+                    echo json_encode(['response' => 404, 'message' => 'Thiếu trường ID hoặc TYPE.']);
+                    break;
+                }
+                $were = ['bill_type' => $bill_type, 'bill_id' => $bill_id];
+                if(!$db_duong->select('bill_id')->from(_DB_TABLE_BILL)->where($were)->fetch_first()){
+                    echo json_encode(['response' => 404, 'message' => 'Dữ liệu không tồn tại']);
+                    break;
+                }
+                if(!$db_duong->delete(_DB_TABLE_BILL)->where($were)->execute()){
+                    echo json_encode(['response' => 404, 'message' => 'Lỗi SQL khi xóa dữ liệu']);
+                    break;
+                }
+                echo json_encode(['response' => 200, 'message' => 'Xóa dữ liệu thành công']);
                 break;
             default:
                 echo json_encode(['response' => 404, 'message' => 'Action Bill không được hỗ trợ']);

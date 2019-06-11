@@ -23,6 +23,8 @@ define('_CONFIG_TIMETOKEN', 600);
 define('_CONFIG_TOKEN_KEYSTART', 'DONG');
 define('_CONFIG_TOKEN_KEYSEND', 'CHINH');
 define('_CONFIG_PAGINATION', 50);
+define('_CONFIG_UNIT', "g");
+define('_CONFIG_MONEY', "₫");
 
 define('_CONFIG_URL_HOME', 'http://localhost/dong/duong');
 define('_CONFIG_URL_API', _CONFIG_URL_HOME.'/api/');

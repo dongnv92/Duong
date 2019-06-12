@@ -74,7 +74,7 @@ switch ($act){
         $db_duong->order_by('customer_id', 'desc');
         $data = $db_duong->fetch();
 
-        $header['title']    = 'Danh sách thành viên';
+        $header['title']    = 'Danh sách khách hàng';
         $css_plus           = ['assets/vendors/css/extensions/sweetalert.css', 'assets/css/plugins/animate/animate.min.css'];
         $js_plus            = ['custom.js?act=customer', 'assets/vendors/js/extensions/sweetalert.min.js'];
         require_once 'header.php';

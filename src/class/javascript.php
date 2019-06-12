@@ -3,6 +3,106 @@ require_once '../core.php';
 header('Content-type: application/javascript');
 
 switch ($act){
+    case 'user':
+        ?>
+        //<script>
+        $(document).ready(function () {
+
+            // Add User
+            $('#submit_add_user').click(function () {
+                var user_name           = $('input[name=user_name]').val();
+                var user_fullname       = $('input[name=user_fullname]').val();
+                var user_pass           = $('input[name=user_pass]').val();
+                var user_repass         = $('input[name=user_repass]').val();
+                var user_phone          = $('input[name=user_phone]').val();
+                var user_address        = $('input[name=user_address]').val();
+                var user_id_facebook    = $('input[name=user_id_facebook]').val();
+                var title               = 'Thêm thành viên';
+
+                $.ajax({
+                    url         : '<?=_CONFIG_URL_API?>',
+                    method      : 'POST',
+                    dataType    : 'json',
+                    data        : {
+                        'token'             : '<?=$function_duong->createToken()?>',
+                        'act'               : 'user',
+                        'type'              : 'add',
+                        'user_name'         : user_name,
+                        'user_fullname'     : user_fullname,
+                        'user_pass'         : user_pass,
+                        'user_repass'       : user_repass,
+                        'user_phone'        : user_phone,
+                        'user_address'      : user_address,
+                        'user_id_facebook'  : user_id_facebook
+                    },
+                    beforeSend  : function () {
+                        $(this).html('Đang thêm thành viên');
+                    },
+                    success     : function (data) {
+                        if(data.response == 200){
+                            $(location).attr('href', '<?=_CONFIG_URL_HOME.'/user.php'?>');
+                        }else{
+                            swal(title, data.message, 'warning');
+                        }
+                    }
+                });
+
+                return false;
+            });
+
+            // Delete User
+            $('a[data-text=user_delete]').click(function () {
+                var userId = $(this).attr('data-content');
+                swal({
+                    title: 'Xóa thành viên',
+                    text: 'Bạn có chắc chắc muốn xóa thành viên này? Sau khi xóa, dữ liệu sẽ không khôi phục được!',
+                    icon: "warning",
+                    buttons: {
+                        cancel: {
+                            text: "Quay Lại",
+                            value: null,
+                            visible: true,
+                            className: "",
+                            closeModal: true,
+                        },
+                        confirm: {
+                            text: "Xóa Ngay",
+                            value: true,
+                            visible: true,
+                            className: "",
+                            closeModal: false
+                        }
+                    }
+                }).then((isConfirm) => {
+                    if (isConfirm) {
+                        $.ajax({
+                            url         : '<?=_CONFIG_URL_API?>',
+                            method      : 'GET',
+                            dataType    : 'json',
+                            data        : {
+                                'token' : '<?=$function_duong->createToken()?>',
+                                'act'   : 'user',
+                                'type'  : 'delete',
+                                'id'    : userId
+                            },
+                            success     : function (data) {
+                                if(data.response == 200){
+                                    $('#tr_'+userId).remove();
+                                    swal('Xóa thành viên', data.message, 'success');
+                                    return false;
+                                }else{
+                                    swal('Xóa thành viên', data.message, 'error');
+                                    return false;
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+        });
+        //</script>
+        <?php
+        break;
     case 'bill':
         ?>
         //<script>

@@ -15,6 +15,81 @@ if(!$function_duong->checkToken($token)){
 }
 
 switch ($act){
+    case 'user':
+        switch ($type){
+            case 'add':
+                $user_name          = isset($_POST['user_name'])        && !empty($_POST['user_name'])          ? $_POST['user_name']       : '';
+                $user_fullname      = isset($_POST['user_fullname'])    && !empty($_POST['user_fullname'])      ? $_POST['user_fullname']   : '';
+                $user_pass          = isset($_POST['user_pass'])        && !empty($_POST['user_pass'])          ? $_POST['user_pass']       : '';
+                $user_repass        = isset($_POST['user_repass'])      && !empty($_POST['user_repass'])        ? $_POST['user_repass']     : '';
+                $user_phone         = isset($_POST['user_phone'])       && !empty($_POST['user_phone'])         ? $_POST['user_phone']      : '';
+                $user_address       = isset($_POST['user_address'])     && !empty($_POST['user_address'])       ? $_POST['user_address']    : '';
+                $user_id_facebook   = isset($_POST['user_id_facebook']) && !empty($_POST['user_id_facebook'])   ? $_POST['user_id_facebook']: '';
+
+                if(!$user_name){
+                    echo json_encode(['response' => 404, 'message' => 'Trường tên đăng nhập cần được nhập']);
+                    break;
+                }
+                if(strlen($user_name) < 4 || strlen($user_name) > 20){
+                    echo json_encode(['response' => 404, 'message' => 'Tên đăng nhập phải từ 4 đến 20 ký tự']);
+                    break;
+                }
+                if(strlen($user_fullname) < 4 || strlen($user_fullname) > 20){
+                    echo json_encode(['response' => 404, 'message' => 'Tên hiển thị phải từ 4 đến 20 ký tự']);
+                    break;
+                }
+                if($db_duong->select('user_id')->from(_DB_TABLE_USERS)->where('user_name', $user_name)->fetch_first()){
+                    echo json_encode(['response' => 404, 'message' => 'Tên đăng nhập đã tồn tại. Vui lòng chọn tên khác']);
+                    break;
+                }
+                if(strlen($user_pass) < 6 || strlen($user_pass) > 20){
+                    echo json_encode(['response' => 404, 'message' => 'Mật khẩu phải từ 4 đến 20 ký tự']);
+                    break;
+                }
+                if($user_pass != $user_repass){
+                    echo json_encode(['response' => 404, 'message' => '2 mật khẩu không giống nhau, vui lòng nhập lại.']);
+                    break;
+                }
+
+                $data = [
+                    'user_name'         => $user_name,
+                    'user_password'     => md5($user_pass),
+                    'user_fullname'     => $user_fullname,
+                    'user_address'      => $user_address,
+                    'user_phone'        => $user_phone,
+                    'user_id_facebook'  => $user_id_facebook,
+                    'user_time'         => _CONFIG_DATETIME
+                ];
+                if(!$db_duong->insert(_DB_TABLE_USERS, $data)){
+                    echo json_encode(['response' => 500, 'message' => 'Lỗi SQL khi thêm thành viên.']);
+                    break;
+                }
+                echo json_encode(['response' => 200, 'message' => 'Thêm thành viên thành công.']);
+                break;
+            case 'delete':
+                if(!$id){
+                    echo json_encode(['response' => 404, 'message' => 'Chưa có thành viên']);
+                    break;
+                }
+                if(!$db_duong->select('user_id')->from(_DB_TABLE_USERS)->where('user_id', $id)->fetch_first()){
+                    echo json_encode(['response' => 404, 'message' => 'Không tồn tại thành viên này']);
+                    break;
+                }
+                if($id == 1){
+                    echo json_encode(['response' => 404, 'message' => 'Không thể xóa thành viên này. ALo 0966624292 để xóa']);
+                    break;
+                }
+                if(!$db_duong->delete(_DB_TABLE_USERS)->where('user_id', $id)->execute()){
+                    echo json_encode(['response' => 500, 'message' => 'Lỗi SQL khi xóa thành viên']);
+                    break;
+                }
+                echo json_encode(['response' => 200, 'message' => 'Xóa thành viên thành công']);
+                break;
+            default:
+                echo json_encode(['response' => 404, 'message' => 'Type User không được hỗ trợ']);
+                break;
+        }
+        break;
     case 'bill':
         switch ($type){
             case 'update':

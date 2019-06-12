@@ -153,16 +153,16 @@ $header['title'] = (isset($header['title']) ? $header['title'] : 'Trang Quản T
                 </ul>
             </li>
             <li class=" nav-item">
-                <a href="#"><i class="la la-cogs"></i><span class="menu-title">Cài đặt</span></a>
+                <a href="#"><i class="ft-user"></i><span class="menu-title">Quản lý thành viên</span></a>
                 <ul class="menu-content">
-                    <li <?php echo ($admin_module == 'category' && in_array($type, array('payment_method'))) ? 'class="active"' : '';?>>
-                        <a class="menu-item" href="<?php echo _URL_ADMIN;?>/category.php?type=payment_method">
-                            <i class="la la-credit-card"></i> Hình thức thanh toán
+                    <li <?php echo ($header['module'] == 'user' && in_array($act, [''])) ? 'class="active"' : '';?>>
+                        <a class="menu-item" href="<?php echo _CONFIG_URL_HOME;?>/user.php">
+                            <i class="ft-users"></i> Danh sách thành viên
                         </a>
                     </li>
-                    <li <?php echo ($admin_module == 'category' && in_array($type, array('role'))) ? 'class="active"' : '';?>>
-                        <a class="menu-item" href="<?php echo _URL_ADMIN;?>/category.php?type=role">
-                            <i class="ft-users"></i> Vai trò thành viên
+                    <li <?php echo ($header['module'] == 'user' && in_array($act, array('add'))) ? 'class="active"' : '';?>>
+                        <a class="menu-item" href="<?php echo _CONFIG_URL_HOME;?>/user.php?act=add">
+                            <i class="ft-user-plus"></i> Thêm thành viên
                         </a>
                     </li>
                 </ul>

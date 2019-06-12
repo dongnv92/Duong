@@ -1,4 +1,1 @@
-<?php
-require_once 'src/core.php';
-
-echo date('Y-m-d 00:00:00', strtotime('11-06-2019'));
+<iframe src="https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fhongdiemmisss%2Fvideos%2F339866996705797%2F&show_text=0&width=267" width="267" height="476" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allowFullScreen="true"></iframe>

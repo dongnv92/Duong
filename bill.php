@@ -237,6 +237,7 @@ switch ($act){
         $db_duong->limit(_CONFIG_PAGINATION, $pagination['page_start']);
         $db_duong->order_by('bill_id', 'desc');
         $datas              = $db_duong->fetch();
+
         $header['title']    = $lang['title'];
         $css_plus           = ['assets/vendors/css/extensions/sweetalert.css','assets/vendors/css/pickers/pickadate/pickadate.css'];
         $js_plus            = [

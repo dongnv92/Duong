@@ -17,6 +17,74 @@ if(!$function_duong->checkToken($token)){
 switch ($act){
     case 'user':
         switch ($type){
+            case 'update':
+                $user_user          = isset($_POST['user_user'])        && !empty($_POST['user_user'])          ? $_POST['user_user']       : '';
+                $user_id            = isset($_POST['user_id'])          && !empty($_POST['user_id'])            ? $_POST['user_id']         : '';
+                $user_name          = isset($_POST['user_name'])        && !empty($_POST['user_name'])          ? $_POST['user_name']       : '';
+                $user_fullname      = isset($_POST['user_fullname'])    && !empty($_POST['user_fullname'])      ? $_POST['user_fullname']   : '';
+                $user_pass          = isset($_POST['user_pass'])        && !empty($_POST['user_pass'])          ? $_POST['user_pass']       : '';
+                $user_repass        = isset($_POST['user_repass'])      && !empty($_POST['user_repass'])        ? $_POST['user_repass']     : '';
+                $user_phone         = isset($_POST['user_phone'])       && !empty($_POST['user_phone'])         ? $_POST['user_phone']      : '';
+                $user_address       = isset($_POST['user_address'])     && !empty($_POST['user_address'])       ? $_POST['user_address']    : '';
+                $user_id_facebook   = isset($_POST['user_id_facebook']) && !empty($_POST['user_id_facebook'])   ? $_POST['user_id_facebook']: '';
+                $data_user          = $db_duong->from(_DB_TABLE_USERS)->where('user_id', $user_id)->fetch_first();
+
+                if(!$user_id){
+                    echo json_encode(['response' => 404, 'message' => 'Thiếu trường ID User']);
+                    break;
+                }
+                if(!$data_user){
+                    echo json_encode(['response' => 404, 'message' => 'Thành viên không tồn tại']);
+                    break;
+                }
+
+                if($user_id == 1 && $user_user != 1){
+                    echo json_encode(['response' => 404, 'message' => 'Không thể xóa thành viên này. Alo 0966624292 để xóa']);
+                    break;
+                }
+
+                if(!$user_name){
+                    echo json_encode(['response' => 404, 'message' => 'Trường tên đăng nhập cần được nhập']);
+                    break;
+                }
+                if($data_user['user_name'] != $user_name && $db_duong->select('user_id')->from(_DB_TABLE_USERS)->where('user_name', $user_name)->fetch_first()){
+                    echo json_encode(['response' => 404, 'message' => 'Tên đăng nhập đã tồn tại. Vui lòng chọn tên khác']);
+                    break;
+                }
+                if(strlen($user_name) < 4 || strlen($user_name) > 20){
+                    echo json_encode(['response' => 404, 'message' => 'Tên đăng nhập phải từ 4 đến 20 ký tự']);
+                    break;
+                }
+                if(strlen($user_fullname) < 4 || strlen($user_fullname) > 20){
+                    echo json_encode(['response' => 404, 'message' => 'Tên hiển thị phải từ 4 đến 20 ký tự']);
+                    break;
+                }
+                if($user_pass && (strlen($user_pass) < 6 || strlen($user_pass) > 20)){
+                    echo json_encode(['response' => 404, 'message' => 'Mật khẩu phải từ 4 đến 20 ký tự']);
+                    break;
+                }
+                if($user_pass && ($user_pass != $user_repass)){
+                    echo json_encode(['response' => 404, 'message' => '2 mật khẩu không giống nhau, vui lòng nhập lại.']);
+                    break;
+                }
+
+                $data = [
+                    'user_name'         => $user_name,
+                    'user_fullname'     => $user_fullname,
+                    'user_address'      => $user_address,
+                    'user_phone'        => $user_phone,
+                    'user_id_facebook'  => $user_id_facebook
+                ];
+                if($user_pass){
+                    $data['user_password'] = md5($user_pass);
+                }
+
+                if(!$db_duong->where('user_id', $user_id)->update(_DB_TABLE_USERS, $data)){
+                    echo json_encode(['response' => 500, 'message' => 'Lỗi SQL khi sửa thành viên.']);
+                    break;
+                }
+                echo json_encode(['response' => 200, 'message' => 'Cập nhật viên thành công.']);
+                break;
             case 'add':
                 $user_name          = isset($_POST['user_name'])        && !empty($_POST['user_name'])          ? $_POST['user_name']       : '';
                 $user_fullname      = isset($_POST['user_fullname'])    && !empty($_POST['user_fullname'])      ? $_POST['user_fullname']   : '';

@@ -62,7 +62,7 @@ if ($_SESSION['user'] && $_SESSION['pass']) {
     }
 }
 
-define('_CONFIG_URL_AVATAR', $user ? 'https://graph.facebook.com/'. $user['user_id_facebook'] .'/picture?type=large' : _CONFIG_URL_HOME.'/assets/images/logo.png');
+define('_CONFIG_URL_AVATAR', $user['user_id_facebook'] ? 'https://graph.facebook.com/'. $user['user_id_facebook'] .'/picture?type=large' : _CONFIG_URL_HOME.'/assets/images/avatar.png');
 
 $submit = (isset($_POST['submit'])      && !empty($_POST['submit']))    ? trim($_POST['submit'])    : false;
 $id     = (isset($_REQUEST['id'])       && !empty($_REQUEST['id']))     ? (int) $_REQUEST['id']     : false;

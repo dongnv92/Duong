@@ -8,6 +8,45 @@ switch ($act){
         //<script>
         $(document).ready(function () {
 
+            // Update User
+            $('#submit_update_user').click(function () {
+                var user_id             = $(this).attr('data-content');
+                var user_user           = $(this).attr('data-user');
+                var user_name           = $('input[name=user_name]').val();
+                var user_fullname       = $('input[name=user_fullname]').val();
+                var user_pass           = $('input[name=user_pass]').val();
+                var user_repass         = $('input[name=user_repass]').val();
+                var user_phone          = $('input[name=user_phone]').val();
+                var user_address        = $('input[name=user_address]').val();
+                var user_id_facebook    = $('input[name=user_id_facebook]').val();
+                var title               = 'Cập nhật thành viên';
+
+                $.ajax({
+                    url         : '<?=_CONFIG_URL_API?>',
+                    method      : 'POST',
+                    dataType    : 'json',
+                    data        : {
+                        'token'             : '<?=$function_duong->createToken()?>',
+                        'act'               : 'user',
+                        'type'              : 'update',
+                        'user_id'           : user_id,
+                        'user_user'         : user_user,
+                        'user_name'         : user_name,
+                        'user_fullname'     : user_fullname,
+                        'user_pass'         : user_pass,
+                        'user_repass'       : user_repass,
+                        'user_phone'        : user_phone,
+                        'user_address'      : user_address,
+                        'user_id_facebook'  : user_id_facebook
+                    },
+                    beforeSend  : function () {
+                        $(this).html('Đang sửa thành viên');
+                    },
+                    success     : function (data) {
+                        swal(title, data.message, data.response == 200 ? 'success' : 'error');
+                    }
+                });
+            });
             // Add User
             $('#submit_add_user').click(function () {
                 var user_name           = $('input[name=user_name]').val();

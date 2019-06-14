@@ -46,7 +46,7 @@ switch ($act){
                 </fieldset>
             </div>
             <div class="card-footer text-right">
-                <button class="btn btn-outline-blue round" id="submit_update_user">Cập nhật thành viên</button>
+                <button class="btn btn-outline-blue round" data-user="<?=$user['user_id']?>" data-content="<?=$id?>" id="submit_update_user">Cập nhật thành viên</button>
             </div>
         </div>
         <?php
@@ -196,14 +196,13 @@ switch ($act){
                                 foreach ($datas AS $data){
                                 ?>
                                     <tr id="tr_<?=$data['user_id']?>">
-                                        <td class="text-center"><?=$data['user_name']?></td>
+                                        <td class="text-center"><a href="user.php?act=update&id=<?=$data['user_id']?>"><?=$data['user_name']?></a></td>
                                         <td class="text-center"><?=$data['user_fullname']?></td>
                                         <td class="text-center"><?=$data['user_address']?></td>
                                         <td class="text-center"><?=$data['user_phone']?></td>
                                         <td class="text-center"><?=$data['user_id_facebook']?></td>
                                         <td class="text-center"><?=date('H:i:s d-m-Y')?></td>
                                         <td class="text-center">
-                                            <a href="bill.php?act=update&type=" class="text-info"><i class="la la-pencil-square-o"></i> Sửa</a>
                                             <a href="javascript:;" class="text-danger" data-text="user_delete" data-content="<?=$data['user_id']?>"><i class="la la-trash-o"></i> Xóa</a>
                                         </td>
                                     </tr>

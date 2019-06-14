@@ -63,13 +63,13 @@ $header['title'] = (isset($header['title']) ? $header['title'] : 'Trang Quản T
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="#"><i class="la la-gears"></i> Sửa trang cá nhân</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="<?=_URL_LOGOUT?>"><i class="ft-power"></i> Thoát</a>
+                            <a class="dropdown-item" href="<?=_CONFIG_URL_LOGOUT?>"><i class="ft-power"></i> Thoát</a>
                         </div>
                     </li>
                     <li class="dropdown dropdown-notification nav-item">
                         <a class="nav-link nav-link-label" href="#" data-toggle="dropdown">
                             <i class="ficon ft-bell"></i>
-                            <?php echo $notification > 0 ? '<span class="badge badge-pill badge-default badge-danger badge-default badge-up badge-glow">'.$notification.'</span>' : '';?>
+                            <span class="badge badge-pill badge-default badge-danger badge-default badge-up badge-glow"></span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-media dropdown-menu-right">
                             <li class="dropdown-menu-header">
@@ -155,7 +155,7 @@ $header['title'] = (isset($header['title']) ? $header['title'] : 'Trang Quản T
             <li class=" nav-item">
                 <a href="#"><i class="ft-user"></i><span class="menu-title">Quản lý thành viên</span></a>
                 <ul class="menu-content">
-                    <li <?php echo ($header['module'] == 'user' && in_array($act, [''])) ? 'class="active"' : '';?>>
+                    <li <?php echo ($header['module'] == 'user' && in_array($act, ['', 'update'])) ? 'class="active"' : '';?>>
                         <a class="menu-item" href="<?php echo _CONFIG_URL_HOME;?>/user.php">
                             <i class="ft-users"></i> Danh sách thành viên
                         </a>

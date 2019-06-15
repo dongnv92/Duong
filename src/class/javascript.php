@@ -3,11 +3,24 @@ require_once '../core.php';
 header('Content-type: application/javascript');
 
 switch ($act){
+    case 'pickdate':
+        ?>
+        //<script>
+        $(".pickadate").pickadate({
+            monthPrev   : "&larr;",
+            monthNext   : "&larr;",
+            format      : "dd-mm-yyyy",
+            formatSubmit: "mm/dd/yyyy",
+            hiddenPrefix: "prefix__",
+            hiddenSuffix: "__suffix"
+        });
+        //</script>
+        <?php
+        break;
     case 'user':
         ?>
         //<script>
         $(document).ready(function () {
-
             // Update User
             $('#submit_update_user').click(function () {
                 var user_id             = $(this).attr('data-content');
@@ -145,14 +158,6 @@ switch ($act){
     case 'bill':
         ?>
         //<script>
-        $(".pickadate").pickadate({
-            monthPrev   : "&larr;",
-            monthNext   : "&larr;",
-            format      : "dd-mm-yyyy",
-            formatSubmit: "mm/dd/yyyy",
-            hiddenPrefix: "prefix__",
-            hiddenSuffix: "__suffix"
-        });
         $(document).ready(function () {
 
             // Search

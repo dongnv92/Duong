@@ -3,13 +3,13 @@ require_once '../core.php';
 header('Content-Type: text/html; charset=utf-8');
 
 if(!$token){
-    $response = ['response'  => 404,'message'   => 'Missing Token'];
+    $response = ['response'  => 404,'message'   => 'Thiếu mã Token'];
     echo json_encode($response);
     exit();
 }
 
 if(!$function_duong->checkToken($token)){
-    $response = ['response'  => 401,'message'   => 'Invalid token code'];
+    $response = ['response'  => 401,'message'   => 'Sai mã Token hoặc mã Token không đúng. Tải lại trang để thực  hiện thao tác này'];
     echo json_encode($response);
     exit();
 }
@@ -55,8 +55,8 @@ switch ($act){
                     echo json_encode(['response' => 404, 'message' => 'Tên đăng nhập phải từ 4 đến 20 ký tự']);
                     break;
                 }
-                if(strlen($user_fullname) < 4 || strlen($user_fullname) > 20){
-                    echo json_encode(['response' => 404, 'message' => 'Tên hiển thị phải từ 4 đến 20 ký tự']);
+                if(strlen($user_fullname) < 4 || strlen($user_fullname) > 50){
+                    echo json_encode(['response' => 404, 'message' => 'Tên hiển thị phải từ 4 đến 20 ký tự. Bạn nhập '.strlen($user_fullname).' ký tự']);
                     break;
                 }
                 if($user_pass && (strlen($user_pass) < 6 || strlen($user_pass) > 20)){
@@ -102,7 +102,7 @@ switch ($act){
                     echo json_encode(['response' => 404, 'message' => 'Tên đăng nhập phải từ 4 đến 20 ký tự']);
                     break;
                 }
-                if(strlen($user_fullname) < 4 || strlen($user_fullname) > 20){
+                if(strlen($user_fullname) < 4 || strlen($user_fullname) > 50){
                     echo json_encode(['response' => 404, 'message' => 'Tên hiển thị phải từ 4 đến 20 ký tự']);
                     break;
                 }
@@ -427,6 +427,11 @@ switch ($act){
                     case in_array($metadataType, ['handbag', 'sizebag']):
                         if(!$metadata_name){
                             $response = ['response'  => 404,'message'   => 'Thiếu trường Metadata Name. Vui lòng thử lại'];
+                            echo json_encode($response);
+                            break;
+                        }
+                        if($db_duong->select('metadata_id')->from(_DB_TABLE_METADATA)->where(['metadata_type' => $metadataType, 'metadata_name' => $metadata_name])->fetch_first()){
+                            $response = ['response'  => 404,'message'   => 'Dữ liệu đã tồn tại. Vui lòng thử lại'];
                             echo json_encode($response);
                             break;
                         }

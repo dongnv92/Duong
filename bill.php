@@ -5,6 +5,66 @@ if (!$user) {
 }
 $header['module'] = 'bill';
 switch ($act){
+    case 'static':
+        $data_handbag = $db_duong->select('metadata_id, metadata_name')->from(_DB_TABLE_METADATA)->where('metadata_type', 'handbag')->fetch();
+        $data_sizebag = $db_duong->select('metadata_id, metadata_name')->from(_DB_TABLE_METADATA)->where('metadata_type', 'sizebag')->fetch();
+
+        $header['title']    = 'Thống kê';
+        require_once 'header.php';
+        ?>
+        <div class="row">
+            <div class="col-12 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Thống kê</h4>
+                    </div>
+                    <div class="card-content mt-1">
+                        <div class="table-responsive">
+                            <table id="recent-orders" class="table table-hover table-xl mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center" width="20%">Loại túi</th>
+                                        <th class="text-center" width="20%">Kích thước túi</th>
+                                        <th class="text-center" width="20%">Số lượng hàng</th>
+                                        <th class="text-center" width="20%">Xuất hàng</th>
+                                        <th class="text-center" width="20%">Hàng tồn kho</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <?php
+                                foreach ($data_handbag as $handbag){
+                                    $i = 0;
+                                    foreach ($data_sizebag as $sizebag){
+                                        $i++;
+                                        if($i == 1){
+                                            echo '<tr>';
+                                                echo '<td valign="center" class="align-middle text-center" rowspan="'. count($data_sizebag) .'">'. $handbag['metadata_name'] .'</td>';
+                                                echo '<td class="text-center">'. $sizebag['metadata_name'] .'</td>';
+                                                echo '<td></td>';
+                                                echo '<td></td>';
+                                                echo '<td></td>';
+                                            echo '</tr>';
+                                        }else{
+                                            echo '<tr>';
+                                            echo '<td class="text-center">'. $sizebag['metadata_name'] .'</td>';
+                                            echo '<td class="text-center"></td>';
+                                            echo '<td></td>';
+                                            echo '<td></td>';
+                                            echo '</tr>';
+                                        }
+                                    }
+                                }
+                                ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
+        require_once 'footer.php';
+        break;
     case 'update':
         if(!in_array($type, ['buy', 'sell'])){
             echo 'Error';
@@ -246,7 +306,8 @@ switch ($act){
             'assets/vendors/js/pickers/pickadate/picker.date.js',
             'assets/vendors/js/pickers/pickadate/picker.time.js',
             'assets/vendors/js/pickers/pickadate/legacy.js',
-            'custom.js?act=bill'
+            'custom.js?act=bill',
+            'custom.js?act=pickdate'
         ];
         require_once 'header.php';
         ?>

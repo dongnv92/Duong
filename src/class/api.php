@@ -160,6 +160,42 @@ switch ($act){
         break;
     case 'bill':
         switch ($type){
+            case 'get_static':
+                $date_start     = isset($_GET['date_start'])    && !empty($_GET['date_start'])      ? trim($_GET['date_start'])     : '';
+                $date_end       = isset($_GET['date_end'])      && !empty($_GET['date_end'])        ? trim($_GET['date_end'])       : '';
+                $bill_handbag   = isset($_GET['bill_handbag'])  && !empty($_GET['bill_handbag'])    ? trim($_GET['bill_handbag'])   : '';
+                $bill_sizebag   = isset($_GET['bill_sizebag'])  && !empty($_GET['bill_sizebag'])    ? trim($_GET['bill_sizebag'])   : '';
+
+                $where_buy      = ['bill_type' => 'buy', 'bill_handbag' => $bill_handbag, 'bill_sizebag' => $bill_sizebag];
+                $db_duong->select('SUM(bill_amount) AS totalAmount, SUM(bill_total_price) AS totalPrice')->from(_DB_TABLE_BILL)->where($where_buy);
+                if($date_start && $date_end){
+                    $date_start = date('Y-m-d 00:00:00', strtotime($date_start));
+                    $date_end   = date('Y-m-d 23:59:59', strtotime($date_end));
+                    $db_duong->between('bill_time', $date_start, $date_end);
+                }
+                $data_buy                   = $db_duong->fetch_first();
+                $data_buy['totalAmount']    = $data_buy['totalAmount'] ? $data_buy['totalAmount']   : 0;
+                $data_buy['totalPrice']     = $data_buy['totalPrice']  ? $data_buy['totalPrice']    : 0;
+
+                $where_sell      = ['bill_type' => 'sell', 'bill_handbag' => $bill_handbag, 'bill_sizebag' => $bill_sizebag];
+                $db_duong->select('SUM(bill_amount) AS totalAmount, SUM(bill_total_price) AS totalPrice')->from(_DB_TABLE_BILL)->where($where_sell);
+                if($date_start && $date_end){
+                    $db_duong->between('bill_time', $date_start, $date_end);
+                }
+                $data_sell                  = $db_duong->fetch_first();
+                $data_sell['totalAmount']   = $data_sell['totalAmount'] ? $data_sell['totalAmount']   : 0;
+                $data_sell['totalPrice']    = $data_sell['totalPrice']  ? $data_sell['totalPrice']    : 0;
+
+                echo json_encode([
+                    'response'          => 200,
+                    'buyTotalAmount'    => $data_buy['totalAmount'],
+                    'buyTotalPrice'     => $data_buy['totalPrice'],
+                    'sellTotalAmount'   => $data_sell['totalAmount'],
+                    'sellTotalPrice'    => $data_sell['totalPrice'],
+                    'finalAmount'       => $data_buy['totalAmount'] - $data_sell['totalAmount'],
+                    'final_Price'       => $data_buy['totalPrice'] - $data_sell['totalPrice']
+                ]);
+                break;
             case 'update':
                 $bill_handbag   = isset($_POST['bill_handbag'])     && !empty($_POST['bill_handbag'])   ? $_POST['bill_handbag']    : '';
                 $bill_sizedbag  = isset($_POST['bill_sizedbag'])    && !empty($_POST['bill_sizedbag'])  ? $_POST['bill_sizedbag']   : '';

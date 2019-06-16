@@ -8,10 +8,36 @@ switch ($act){
     case 'static':
         $data_handbag = $db_duong->select('metadata_id, metadata_name')->from(_DB_TABLE_METADATA)->where('metadata_type', 'handbag')->fetch();
         $data_sizebag = $db_duong->select('metadata_id, metadata_name')->from(_DB_TABLE_METADATA)->where('metadata_type', 'sizebag')->fetch();
-
+        $css_plus           = ['assets/vendors/css/extensions/sweetalert.css','assets/vendors/css/pickers/pickadate/pickadate.css'];
+        $js_plus            = [
+            'assets/vendors/js/extensions/sweetalert.min.js',
+            'assets/vendors/js/pickers/pickadate/picker.js',
+            'assets/vendors/js/pickers/pickadate/picker.date.js',
+            'assets/vendors/js/pickers/pickadate/picker.time.js',
+            'assets/vendors/js/pickers/pickadate/legacy.js',
+            'custom.js?act=bill',
+            'custom.js?act=pickdate'
+        ];
         $header['title']    = 'Thống kê';
         require_once 'header.php';
         ?>
+        <div class="row">
+            <div class="col-md-4 text-center">
+                <div class="input-group">
+                    <div class="input-group-prepend"><span class="input-group-text"><span class="la la-calendar-o"></span></span></div>
+                    <input type='text' name="date_start" value="<?=$_GET['date_start']?$_GET['date_start']: ''?>" class="form-control pickadate datepicker round" placeholder="Từ ngày" />
+                </div>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="input-group">
+                    <div class="input-group-prepend"><span class="input-group-text"><span class="la la-calendar-o"></span></span></div>
+                    <input type='text' name="date_end" value="<?=$_GET['date_end']?$_GET['date_end']: ''?>" class="form-control pickadate datepicker round" placeholder="Đến ngày" />
+                </div>
+            </div>
+            <div class="col-md-4 text-right">
+                <button class="btn btn-outline-blue round" id="bill_search" data-type="<?=$type?>" style="width: 100%">Lọc dữ liệu</button>
+            </div>
+        </div><br />
         <div class="row">
             <div class="col-12 col-md-12">
                 <div class="card">
@@ -25,7 +51,7 @@ switch ($act){
                                     <tr>
                                         <th class="text-center" width="20%">Loại túi</th>
                                         <th class="text-center" width="20%">Kích thước túi</th>
-                                        <th class="text-center" width="20%">Số lượng hàng</th>
+                                        <th class="text-center" width="20%">Số lượng hàng (G)</th>
                                         <th class="text-center" width="20%">Xuất hàng</th>
                                         <th class="text-center" width="20%">Hàng tồn kho</th>
                                     </tr>
@@ -36,20 +62,21 @@ switch ($act){
                                     $i = 0;
                                     foreach ($data_sizebag as $sizebag){
                                         $i++;
+                                        $data = json_decode(file_get_contents(_CONFIG_URL_API.'?act=bill&token='. $function_duong->createToken() .'&type=get_static&date_start='.$_GET['date_start'].'&date_end='.$_GET['date_end'].'&bill_handbag='.$handbag['metadata_id'].'&bill_sizebag='.$sizebag['metadata_id']), true);
                                         if($i == 1){
                                             echo '<tr>';
                                                 echo '<td valign="center" class="align-middle text-center" rowspan="'. count($data_sizebag) .'">'. $handbag['metadata_name'] .'</td>';
                                                 echo '<td class="text-center">'. $sizebag['metadata_name'] .'</td>';
-                                                echo '<td></td>';
-                                                echo '<td></td>';
-                                                echo '<td></td>';
+                                                echo '<td class="text-center">'. $data['buyTotalAmount'].'</td>';
+                                                echo '<td class="text-center">'. $data['sellTotalAmount'] .'</td>';
+                                                echo '<td class="text-center">'. $data['finalAmount'] .'</td>';
                                             echo '</tr>';
                                         }else{
                                             echo '<tr>';
                                             echo '<td class="text-center">'. $sizebag['metadata_name'] .'</td>';
-                                            echo '<td class="text-center"></td>';
-                                            echo '<td></td>';
-                                            echo '<td></td>';
+                                            echo '<td class="text-center">'. $data['buyTotalAmount'] .'</td>';
+                                            echo '<td class="text-center">'. $data['sellTotalAmount'] .'</td>';
+                                            echo '<td class="text-center">'. $data['finalAmount'] .'</td>';
                                             echo '</tr>';
                                         }
                                     }

@@ -38,10 +38,10 @@ switch ($act){
                     break;
                 }
 
-                if($user_id == 1 && $user_user != 1){
+                /*if($user_id == 1 && $user_user != 1){
                     echo json_encode(['response' => 404, 'message' => 'Không thể xóa thành viên này. Alo 0966624292 để xóa']);
                     break;
-                }
+                }*/
 
                 if(!$user_name){
                     echo json_encode(['response' => 404, 'message' => 'Trường tên đăng nhập cần được nhập']);
@@ -143,10 +143,10 @@ switch ($act){
                     echo json_encode(['response' => 404, 'message' => 'Không tồn tại thành viên này']);
                     break;
                 }
-                if($id == 1){
+                /*if($id == 1){
                     echo json_encode(['response' => 404, 'message' => 'Không thể xóa thành viên này. ALo 0966624292 để xóa']);
                     break;
-                }
+                }*/
                 if(!$db_duong->delete(_DB_TABLE_USERS)->where('user_id', $id)->execute()){
                     echo json_encode(['response' => 500, 'message' => 'Lỗi SQL khi xóa thành viên']);
                     break;

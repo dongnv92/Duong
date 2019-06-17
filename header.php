@@ -117,6 +117,7 @@ $header['title'] = (isset($header['title']) ? $header['title'] : 'Trang Quản T
                     </li>
                 </ul>
             </li>
+            <li class="nav-item <?=($header['module'] == 'bill' && $act == 'static') ? 'active' : '';?>"><a href="bill.php?act=static"><i class="ft-trending-up"></i><span class="menu-title">Thống kê</span></a></li>
             <!-- BAN QUẢN TRỊ -->
             <li class=" navigation-header">
                 <span data-i18n="nav.category.layouts">Ban Quản Trị</span>

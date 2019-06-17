@@ -180,6 +180,19 @@ switch ($act){
                 return false;
             });
 
+            // Search
+            $('#static_search').click(function () {
+                var date_start      = $('input[name=date_start]').val();
+                var date_end        = $('input[name=date_end]').val();
+
+                $(location).attr('href', '<?=_CONFIG_URL_HOME?>/bill.php?act=static'+
+                    (date_start     ? '&date_start='+date_start : '')+
+                    (date_end       ? '&date_end='+date_end: '')
+                );
+
+                return false;
+            });
+
             // Add Bill
             $('#bill_add').click(function () {
                 var bill_type       = $(this).attr('data-content');

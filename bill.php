@@ -35,7 +35,7 @@ switch ($act){
                 </div>
             </div>
             <div class="col-md-4 text-right">
-                <button class="btn btn-outline-blue round" id="bill_search" data-type="<?=$type?>" style="width: 100%">Lọc dữ liệu</button>
+                <button class="btn btn-outline-blue round" id="static_search" data-type="<?=$type?>" style="width: 100%">Lọc dữ liệu</button>
             </div>
         </div><br />
         <div class="row">
